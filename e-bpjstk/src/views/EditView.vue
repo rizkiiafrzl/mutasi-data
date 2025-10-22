@@ -493,12 +493,6 @@ const uploadOptions = ref([
     description: 'Upload TK Aktif Massal'
   },
   {
-    label: 'TK NA Massal',
-    icon: 'mdi-account-multiple-minus',
-    action: 'upload-tk-na-massal',
-    description: 'Upload TK Nonaktif Massal'
-  },
-  {
     label: 'Upah Massal',
     icon: 'mdi-cash-multiple',
     action: 'upload-upah-massal',
@@ -773,14 +767,11 @@ const handleActionClick = (action) => {
 const handleUploadOption = (action) => {
   console.log('Upload option selected:', action)
   if (action === 'upload-tk-massal') {
-    // Fitur 4.1: Upload TK Massal (TK Aktif)
-    router.push('/tenaga/upload-tk-massal')
-  } else if (action === 'upload-tk-na-massal') {
-    // Fitur 4.2: Upload TK Nonaktif Massal
-    router.push('/tenaga/upload-tk-na-massal')
+    // Arahkan ke halaman upload massal TK yang lama (saat masih di TAMBAH TK)
+    router.push('/tenaga/upload')
   } else if (action === 'upload-upah-massal') {
-    // Fitur 4.3: Upload Upah Massal dengan Preview & Log
-    router.push('/tenaga/upload-upah-massal')
+    // Upload Upah Massal dengan Preview & Log
+    router.push('/tenaga/upload-upah')
   }
 }
 
