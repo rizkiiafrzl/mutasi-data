@@ -1,0 +1,767 @@
+/* ========================================
+   1. VARIABLES & SETUP
+   ======================================== */
+   :root {
+    /* Colors - Updated to Green Theme */
+    --color-primary: #009849;
+    --color-secondary: #007a3a;
+    --color-background: #f5f5f5;
+    --color-text-dark: #333333;
+    --color-text-light: #ffffff;
+    --color-white: #ffffff;
+    --color-success: #009849;
+    --color-danger: #dc2626;
+    --color-warning: #f59e0b;
+  
+    /* Spacing */
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+  
+    /* Borders & Shadows */
+    --border-radius-base: 12px;
+    --border-radius-sm: 6px;
+    --shadow-base: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+  
+    /* Transitions */
+    --transition-base: all 0.3s ease;
+  
+    /* Typography */
+    --font-weight-bold: 700;
+    --font-size-title: 1.25rem;
+    --font-size-dashboard-title: 2rem;
+  }
+  
+  /* ========================================
+     2. BASE & LAYOUT STYLES
+     ======================================== */
+.dashboard-wrapper {
+  background: #ffffff !important; /* ensure light background */
+  min-height: 100vh;
+}
+
+  .dashboard-container {
+    padding: var(--spacing-xl);
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  .dashboard-title {
+    font-size: var(--font-size-dashboard-title);
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    color: var(--color-text-dark);
+    animation: fadeInDown 1s ease-out;
+}
+
+.header-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+ /* ========================================
+   3. COMPONENT: CARDS (FIXED)
+   ======================================== */
+.base-card {
+  border-radius: var(--border-radius-base);
+  background: var(--color-white);
+  margin-bottom: var(--spacing-lg);
+  transition: var(--transition-base);
+}
+
+.base-card--interactive {
+  cursor: pointer;
+}
+
+.base-card--interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover) !important;
+}
+
+/* Specific Card Types */
+.summary-card, .iuran-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;        /* center horizontally */
+  padding: var(--spacing-md);
+  text-align: center;
+  position: relative;
+}
+
+/* Nudge card content slightly upward so not dead-center */
+.summary-card .v-card-text,
+.iuran-card .v-card-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  transform: translateY(-6px);
+}
+
+/* Center the top action buttons with 1cm spacing */
+.action-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 38px; /* ~1cm on standard 96dpi screens */
+  padding: 0 var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+}
+.action-buttons-container .v-btn {
+  height: 40px;
+  border-radius: var(--border-radius-sm);
+}
+
+.summary-card {
+  height: 140px;
+}
+
+.iuran-card {
+  height: 120px;
+}
+
+.management-card {
+  animation: fadeInUp 2s ease-out;
+}
+
+.management-title {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-dark);
+  padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+}
+
+
+/* ========================================
+   5. COMPONENT: FILTERS & SEARCH (FIXED)
+   ======================================== */
+.filter-controls-container,
+.filter-search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap; /* Memungkinkan item pindah ke baris baru di layar kecil */
+  gap: 12px;       /* Jarak antar item filter */
+  margin-bottom: var(--spacing-md);
+  padding: 0 var(--spacing-xl); /* Memberi padding horizontal pada container */
+}
+
+/* PERUBAHAN: Selector dibuat lebih kuat untuk menargetkan SEMUA kontrol di dalamnya */
+.filter-controls-container .v-select,
+.filter-controls-container .v-text-field,
+.filter-controls-container .v-btn,
+.filter-search-container .v-select,
+.filter-search-container .v-text-field,
+.filter-search-container .v-btn {
+  /* Paksa semua item memiliki ukuran yang sama */
+  width: 160px !important;      /* Tentukan lebar yang seragam */
+  min-width: 160px !important;
+  max-width: 160px !important;
+  height: 40px !important;
+  flex: 0 0 160px !important; /* Mencegah item membesar atau mengecil */
+}
+
+/* Style Vuetify's internal elements to match */
+.filter-controls-container :is(.v-input__control, .v-field, .v-btn),
+.filter-search-container :is(.v-input__control, .v-field, .v-btn) {
+  height: 40px !important;
+  min-height: 40px !important;
+  border-radius: var(--border-radius-sm) !important;
+}
+
+.filter-controls-container .v-field__input,
+.filter-search-container .v-field__input {
+  display: flex;
+  align-items: center;
+  padding: 0 12px !important;
+}
+
+.filter-controls-container .v-field__outline,
+.filter-search-container .v-field__outline {
+  --v-field-border-width: 1px !important;
+}
+
+/* Center the dropdown chevrons and normalize text */
+.filter-controls-container .v-field__append-inner,
+.filter-controls-container .v-field__prepend-inner,
+.filter-search-container .v-field__append-inner,
+.filter-search-container .v-field__prepend-inner {
+  display: flex !important;
+  align-items: center !important;
+  margin-top: 0 !important;
+}
+.filter-controls-container :is(.v-field__input, .v-btn__content),
+.filter-search-container :is(.v-field__input, .v-btn__content) {
+  font-size: 13px !important;
+}
+
+/* Center the text/content inside fields so tidak menempel kiri */
+.filter-controls-container .v-field__input,
+.filter-search-container .v-field__input {
+  justify-content: center !important;
+  text-align: center !important;
+  align-items: center !important;
+  line-height: 1 !important;
+  padding-top: 2px !important;  /* nudge text slightly upward */
+}
+
+/* Fine-tune Vuetify select so teks tidak turun dibanding tombol */
+.filter-search-container .v-select .v-field__input,
+.filter-controls-container .v-select .v-field__input {
+  padding-top: 0 !important;
+  transform: translateY(-2px) !important; /* lift select content a bit */
+}
+
+/* Match search text-field vertical centering with Refresh TK */
+.filter-search-container .search-field .v-field,
+.filter-search-container .search-field .v-input__control {
+  height: 40px !important;
+  min-height: 40px !important;
+}
+.filter-search-container .search-field .v-field__input {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-top: 0 !important;
+  transform: translateY(-2px) !important; /* same lift as select */
+}
+
+/* Split layout: filter + refresh di kiri, pencarian + search di kanan */
+.filter-search-container > .d-flex {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1cm !important; /* add ~1cm spacing between fields */
+}
+.filter-search-container .search-field {
+  margin-left: auto !important; /* push search section to the right */
+}
+  
+  /* ========================================
+     6. COMPONENT: TABLES
+     ======================================== */
+  .data-table {
+    border-radius: 8px;
+    margin-top: var(--spacing-md);
+  }
+  
+  .data-table thead th {
+    background-color: var(--color-success);
+    color: var(--color-text-light);
+    font-weight: var(--font-weight-bold);
+    text-align: center !important;
+  }
+
+  /* Align body cells consistently per column so positions match headers */
+  .data-table tbody td.nik-column,
+  .data-table thead th.nik-column { text-align: left; padding-left: 12px; }
+
+  .data-table tbody td.kpj-column,
+  .data-table thead th.kpj-column { text-align: left; }
+
+  .data-table tbody td.no-pegawai-column,
+  .data-table thead th.no-pegawai-column { text-align: left; }
+
+  .data-table tbody td.nama-column,
+  .data-table thead th.nama-column { text-align: left; }
+
+  .data-table tbody td.upah-column,
+  .data-table thead th.upah-column { text-align: right; padding-right: 12px; }
+
+  .data-table tbody td.rapel-column,
+  .data-table thead th.rapel-column { text-align: right; padding-right: 12px; }
+
+  .data-table tbody td.status-column,
+  .data-table thead th.status-column { text-align: center; }
+
+  .data-table tbody td.action-column,
+  .data-table thead th.action-column { text-align: right; padding-right: 16px; }
+
+  /* Force ALL headers and cells to be centered to match request */
+  .data-table thead th,
+  .data-table tbody td {
+    text-align: center !important;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  .data-table--striped tbody tr:nth-child(even) {
+    background-color: #f6fff9;
+  }
+  
+  /* ========================================
+     7. ANIMATIONS
+     ======================================== */
+  .header-section {
+    animation: slideInLeft 0.8s ease-out;
+  }
+  
+  .breadcrumb {
+    animation: slideInRight 0.8s ease-out;
+  }
+  
+  .summary-cards-row {
+    animation: fadeInUp 1.2s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* ========================================
+     8. RESPONSIVE
+     ======================================== */
+@media (max-width: 600px) {
+  .dashboard-container {
+      padding: var(--spacing-md);
+  }
+  
+  .action-buttons-container {
+    flex-direction: column;
+      align-items: stretch; /* Make buttons full width */
+    }
+  }
+  
+  /* Align action column to the right with breathing room */
+  .action-column, th.action-column {
+    text-align: right !important;
+    padding-right: 16px !important;
+  }
+
+/* ========================================
+   9. NEW DASHBOARD LAYOUT STYLES
+   ======================================== */
+
+/* Dashboard Container */
+.dashboard-container {
+  background: #f5f5f5;
+  min-height: 100vh;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Header Styles */
+.dashboard-header {
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: slideInDown 0.8s ease-out;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Main Content */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Welcome Card */
+.welcome-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.welcome-title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.welcome-subtitle {
+  font-size: var(--font-size-lg);
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.create-btn {
+  background: #009849 !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  padding: 12px 32px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  transition: all 0.3s ease;
+}
+
+/* Responsive button font sizes and text */
+@media (max-width: 768px) {
+  .create-btn {
+    font-size: var(--font-size-sm);
+    padding: 10px 20px;
+    letter-spacing: 0.3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-btn {
+    font-size: var(--font-size-xs);
+    padding: 8px 16px;
+    letter-spacing: 0.2px;
+  }
+}
+
+@media (max-width: 360px) {
+  .create-btn {
+    font-size: var(--font-size-xs);
+    padding: 6px 12px;
+    letter-spacing: 0.1px;
+  }
+}
+
+.create-btn:hover {
+  background: #007a3a !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 152, 73, 0.3);
+}
+
+/* History Card */
+.history-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 1.2s ease-out 0.4s both;
+}
+
+.history-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: #333;
+  padding: 20px 24px 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Table Styles */
+.history-table {
+  width: 100%;
+}
+
+.history-table thead th {
+  background: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  padding: 16px 12px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.history-table tbody td {
+  padding: 16px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+  font-size: var(--font-size-sm);
+  transition: background-color 0.3s ease;
+}
+
+.history-table tbody tr {
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.history-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.history-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.history-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.history-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+.history-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+
+.history-table tbody tr:hover td {
+  background-color: rgba(0, 152, 73, 0.05);
+}
+
+.period-cell {
+  font-weight: 500;
+  color: #333;
+}
+
+/* Status Chips */
+.status-chip {
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.status-chip:hover {
+  transform: scale(1.05);
+}
+
+/* Action Buttons - Visible by default for desktop/tablet */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  font-weight: 500;
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  min-width: auto;
+  padding: 4px 8px;
+}
+
+/* Responsive action button font sizes */
+@media (min-width: 768px) {
+  .action-btn {
+    font-size: var(--font-size-sm);
+    padding: 6px 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .action-btn {
+    font-size: var(--font-size-base);
+    padding: 8px 16px;
+  }
+}
+
+.action-btn.v-btn--variant-text {
+  text-decoration: none;
+}
+
+.action-btn {
+  transition: background-color 0.3s ease;
+}
+
+.action-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Three Dots Menu for Mobile/Tablet - Hidden by default */
+.three-dots-menu {
+  display: none;
+}
+
+.three-dots-btn {
+  font-size: var(--font-size-lg);
+  color: #dc2626 !important; /* Red color to match action buttons */
+  padding: 4px;
+  min-width: auto;
+  transition: all 0.3s ease;
+}
+
+.three-dots-btn:hover {
+  background: rgba(220, 38, 38, 0.1) !important; /* Light red hover */
+  color: #b91c1c !important; /* Darker red on hover */
+  transform: scale(1.1);
+}
+
+/* Action Menu Items */
+.action-menu-item {
+  font-size: var(--font-size-sm);
+  padding: 8px 16px;
+  color: #dc2626 !important; /* Red color to match action buttons */
+  transition: all 0.3s ease;
+}
+
+.action-menu-item .v-icon {
+  margin-right: 8px;
+  color: #dc2626 !important; /* Red color for icons */
+  transition: all 0.3s ease;
+}
+
+.action-menu-item:hover {
+  background: rgba(220, 38, 38, 0.1) !important; /* Light red hover background */
+  color: #b91c1c !important; /* Darker red on hover */
+  transform: translateX(4px);
+}
+
+.action-menu-item:hover .v-icon {
+  color: #b91c1c !important; /* Darker red for icons on hover */
+  transform: scale(1.1);
+}
+
+/* Responsive action menu item font sizes */
+@media (max-width: 480px) {
+  .action-menu-item {
+    font-size: var(--font-size-xs);
+    padding: 6px 12px;
+  }
+}
+
+/* Pagination Info */
+.pagination-info {
+  padding: 16px 24px;
+  color: #666;
+  font-size: var(--font-size-sm);
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+/* Responsive Design for New Dashboard */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .header-content {
+    padding: 0 16px;
+  }
+  
+  .header-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .welcome-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .welcome-subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .create-btn {
+    font-size: var(--font-size-sm);
+    padding: 10px 24px;
+  }
+  
+  .history-table thead th,
+  .history-table tbody td {
+    padding: 12px 8px;
+    font-size: var(--font-size-xs);
+  }
+  
+  /* Hide action buttons, show three dots menu for screens smaller than iPad */
+  .action-buttons {
+    display: none;
+  }
+  
+  .three-dots-menu {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .welcome-card .v-card-text {
+    padding: 24px 16px !important;
+  }
+  
+  .welcome-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .welcome-subtitle {
+    font-size: var(--font-size-sm);
+  }
+  
+  .history-title {
+    padding: 16px;
+    font-size: var(--font-size-lg);
+  }
+  
+  .history-table thead th,
+  .history-table tbody td {
+    padding: 8px 4px;
+    font-size: var(--font-size-xs);
+  }
+  
+  .pagination-info {
+    padding: 12px 16px;
+    font-size: var(--font-size-xs);
+  }
+}

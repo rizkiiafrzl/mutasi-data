@@ -1,0 +1,591 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.edit-container {
+  font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f8f9fa;
+  padding: 40px 20px;
+  min-height: 100vh;
+  color: #1a1a1a;
+  max-width: 100%;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 48px;
+  animation: fadeIn 0.8s ease;
+  position: relative;
+}
+
+.header-text {
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  letter-spacing: -0.025em;
+}
+
+.header p {
+  font-size: 1rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.header-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+}
+
+.back-btn {
+  background: white;
+  color: #dc2626;
+  border: 2px solid #dc2626;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.back-btn:hover {
+  background: #dc2626;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.back-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.2);
+}
+
+.back-btn .v-icon {
+  font-size: 18px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+  max-width: 100%;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.8s ease;
+}
+
+.stat-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+.stat-number {
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  letter-spacing: -0.025em;
+}
+
+.stat-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.financial-card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.financial-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+.financial-amount {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: -0.025em;
+}
+
+.positive {
+  color: #059669;
+}
+
+.negative {
+  color: #dc2626;
+}
+
+.neutral {
+  color: #1a1a1a;
+}
+
+.financial-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.detail-btn {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+}
+
+.detail-btn:hover {
+  background: #374151;
+}
+
+.detail-btn:active {
+  transform: scale(0.98);
+}
+
+.iuran-section {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 32px;
+  animation: fadeIn 1s ease;
+}
+
+.iuran-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 32px;
+  letter-spacing: -0.025em;
+}
+
+.iuran-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  max-width: 100%;
+}
+
+.iuran-item {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 28px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.iuran-item:hover {
+  background: white;
+  border-color: #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.iuran-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.iuran-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.badge-blue {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.badge-pink {
+  background: #fdf2f8;
+  color: #db2777;
+}
+
+.badge-orange {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.badge-purple {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.iuran-name {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.iuran-amount {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.025em;
+}
+
+.kartu-btn {
+  background: white;
+  color: #1a1a1a;
+  border: 1px solid #e5e7eb;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  width: 100%;
+  letter-spacing: 0.01em;
+}
+
+.kartu-btn:hover {
+  background: #fafafa;
+  border-color: #d1d5db;
+}
+
+.kartu-btn:active {
+  transform: scale(0.98);
+}
+
+.pengelolaan-section {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  border: 1px solid #e5e7eb;
+  animation: fadeIn 1.2s ease;
+  margin-bottom: 24px;
+}
+
+.pengelolaan-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* Action Buttons Container */
+.action-buttons-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.action-btn {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Upload Options Dropdown */
+.upload-option-item {
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+}
+
+.upload-option-item:hover {
+  background: #f8f9fa;
+  transform: translateX(4px);
+}
+
+.upload-option-item .v-list-item-title {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #1a1a1a;
+}
+
+.upload-option-item .v-list-item-subtitle {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.tab-btn {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.tab-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Filter and Search Container */
+.filter-search-container {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.filter-search-container .d-flex {
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* Table Styling */
+.table-container {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.data-table {
+  width: 100%;
+}
+
+.data-table thead th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 16px 12px;
+  border-bottom: 2px solid #e5e7eb;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.data-table tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.data-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.data-table tbody tr:hover td {
+  background: #f8f9fa;
+}
+
+/* Action Column */
+.action-column {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-column .v-btn {
+  min-width: 32px;
+  height: 32px;
+}
+
+/* Table Footer */
+.table-footer {
+  background: #f8f9fa;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Desktop Large (1200px+) */
+@media (min-width: 1200px) {
+  .edit-container {
+    padding: 40px 40px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  
+  .iuran-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+}
+
+/* Desktop Extra Large (1400px+) */
+@media (min-width: 1400px) {
+  .edit-container {
+    padding: 40px 60px;
+  }
+  
+  .stats-grid {
+    gap: 40px;
+  }
+  
+  .iuran-grid {
+    gap: 40px;
+  }
+}
+
+/* Tablet and Mobile */
+@media (max-width: 768px) {
+  .edit-container {
+    padding: 24px 16px;
+  }
+
+  .header-actions {
+    position: static;
+    margin-top: 16px;
+    justify-content: flex-start;
+  }
+
+  .back-btn {
+    font-size: 0.875rem;
+    padding: 8px 16px;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .stat-number, .financial-amount {
+    font-size: 1.75rem;
+  }
+
+  .iuran-section {
+    padding: 28px;
+  }
+
+  /* Pengelolaan Section Mobile */
+  .pengelolaan-section {
+    padding: 20px;
+  }
+
+  .action-buttons-container {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .action-btn {
+    font-size: 0.8rem;
+    padding: 10px 12px;
+  }
+
+  .tab-navigation {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tab-btn {
+    font-size: 0.8rem;
+    padding: 10px 16px;
+  }
+
+  .filter-search-container {
+    padding: 16px;
+  }
+
+  .filter-search-container .d-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-search-container .d-flex > * {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .data-table thead th,
+  .data-table tbody td {
+    padding: 8px 4px;
+    font-size: 0.75rem;
+  }
+
+  .action-column {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .action-column .v-btn {
+    min-width: 28px;
+    height: 28px;
+  }
+}
