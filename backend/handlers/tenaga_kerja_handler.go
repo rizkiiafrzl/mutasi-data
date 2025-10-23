@@ -162,3 +162,40 @@ func (h *TenagaKerjaHandler) Delete(c *fiber.Ctx) error {
 		"message": "Tenaga kerja deleted successfully",
 	})
 }
+
+// PUT /api/tenaga-kerja/:id/status
+func (h *TenagaKerjaHandler) UpdateStatus(c *fiber.Ctx) error {
+	id, err := strconv.ParseUint(c.Params("id"), 10, 32)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Invalid ID",
+			"error":   err.Error(),
+		})
+	}
+
+	var req struct {
+		Status string `json:"status"`
+	}
+
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Invalid request body",
+			"error":   err.Error(),
+		})
+	}
+
+	if err := h.service.UpdateStatus(uint(id), req.Status); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Failed to update status",
+			"error":   err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"message": "Status updated successfully",
+	})
+}

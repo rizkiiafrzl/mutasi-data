@@ -15,6 +15,7 @@ type TenagaKerja struct {
 	StatusPegawai         string     `gorm:"type:varchar(50)" json:"status_pegawai"`
 	TanggalAwalBekerja    time.Time  `json:"tanggal_awal_bekerja"`
 	TanggalAkhirKontrak   *time.Time `json:"tanggal_akhir_kontrak"`
+	StatusKepesertaan     string     `gorm:"type:varchar(50);default:'Aktif'" json:"status_kepesertaan"` // TAMBAH INI
 	CreatedAt             time.Time  `json:"created_at"`
 	UpdatedAt             time.Time  `json:"updated_at"`
 

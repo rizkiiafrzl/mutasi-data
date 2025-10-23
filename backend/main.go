@@ -107,6 +107,7 @@ func main() {
 	tkRoutes.Post("/", tenagaKerjaHandler.Create)
 	tkRoutes.Put("/:id", tenagaKerjaHandler.Update)
 	tkRoutes.Delete("/:id", tenagaKerjaHandler.Delete)
+	tkRoutes.Put("/:id/status", tenagaKerjaHandler.UpdateStatus)
 
 	port := cfg.Port
 	log.Printf("🚀 Server starting on http://localhost:%s", port)

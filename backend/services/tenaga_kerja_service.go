@@ -15,6 +15,7 @@ type TenagaKerjaService interface {
 	Create(tk *models.TenagaKerja) error
 	Update(id uint, tk *models.TenagaKerja) error
 	Delete(id uint) error
+	UpdateStatus(id uint, status string) error // TAMBAH INI
 }
 
 type tenagaKerjaService struct {
@@ -26,7 +27,6 @@ func NewTenagaKerjaService(repo repositories.TenagaKerjaRepository) TenagaKerjaS
 }
 
 func (s *tenagaKerjaService) GetAll(perusahaanID uint, periodeID uint, status string, search string, page int, limit int) ([]models.TenagaKerja, int64, error) {
-	// Default pagination
 	if page < 1 {
 		page = 1
 	}
@@ -52,7 +52,6 @@ func (s *tenagaKerjaService) GetByID(id uint) (*models.TenagaKerja, error) {
 }
 
 func (s *tenagaKerjaService) Create(tk *models.TenagaKerja) error {
-	// Validasi required fields
 	if tk.PerusahaanID == 0 {
 		return errors.New("perusahaan_id is required")
 	}
@@ -66,12 +65,10 @@ func (s *tenagaKerjaService) Create(tk *models.TenagaKerja) error {
 		return errors.New("nama_lengkap is required")
 	}
 
-	// Validasi NIK (harus 16 digit)
 	if !isValidNIK(tk.NIK) {
 		return errors.New("nik harus 16 digit angka")
 	}
 
-	// Cek NIK sudah ada atau belum
 	exists, err := s.repo.CheckNIKExists(tk.PerusahaanID, tk.NIK, 0)
 	if err != nil {
 		return err
@@ -80,11 +77,15 @@ func (s *tenagaKerjaService) Create(tk *models.TenagaKerja) error {
 		return errors.New("nik sudah terdaftar untuk perusahaan ini")
 	}
 
+	// Set default status jika kosong
+	if tk.StatusKepesertaan == "" {
+		tk.StatusKepesertaan = "Aktif"
+	}
+
 	return s.repo.Create(tk)
 }
 
 func (s *tenagaKerjaService) Update(id uint, tk *models.TenagaKerja) error {
-	// Cek apakah TK exists
 	existing, err := s.repo.GetByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -93,13 +94,11 @@ func (s *tenagaKerjaService) Update(id uint, tk *models.TenagaKerja) error {
 		return err
 	}
 
-	// Validasi NIK jika diubah
 	if tk.NIK != "" && tk.NIK != existing.NIK {
 		if !isValidNIK(tk.NIK) {
 			return errors.New("nik harus 16 digit angka")
 		}
 
-		// Cek NIK baru sudah ada atau belum
 		exists, err := s.repo.CheckNIKExists(existing.PerusahaanID, tk.NIK, id)
 		if err != nil {
 			return err
@@ -109,9 +108,6 @@ func (s *tenagaKerjaService) Update(id uint, tk *models.TenagaKerja) error {
 		}
 	}
 
-	// Update fields yang boleh diubah (KPJ dan NIK tidak boleh diubah)
-	// existing.NoKPJ = tk.NoKPJ // KPJ tidak boleh diubah
-	// existing.NIK = tk.NIK     // NIK tidak boleh diubah
 	existing.NamaLengkap = tk.NamaLengkap
 	existing.TanggalLahir = tk.TanggalLahir
 	existing.StatusKewarganegaraan = tk.StatusKewarganegaraan
@@ -123,7 +119,6 @@ func (s *tenagaKerjaService) Update(id uint, tk *models.TenagaKerja) error {
 }
 
 func (s *tenagaKerjaService) Delete(id uint) error {
-	// Cek apakah exists
 	_, err := s.repo.GetByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -135,9 +130,26 @@ func (s *tenagaKerjaService) Delete(id uint) error {
 	return s.repo.Delete(id)
 }
 
-// Helper function untuk validasi NIK
+// TAMBAH METHOD INI
+func (s *tenagaKerjaService) UpdateStatus(id uint, status string) error {
+	// Cek TK exists
+	_, err := s.repo.GetByID(id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("tenaga kerja not found")
+		}
+		return err
+	}
+
+	// Validasi status
+	if status != "Aktif" && status != "Nonaktif" {
+		return errors.New("status harus 'Aktif' atau 'Nonaktif'")
+	}
+
+	return s.repo.UpdateStatus(id, status)
+}
+
 func isValidNIK(nik string) bool {
-	// NIK harus 16 digit angka
 	match, _ := regexp.MatchString(`^\d{16}$`, nik)
 	return match
 }

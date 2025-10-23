@@ -13,6 +13,7 @@ type TenagaKerjaRepository interface {
 	Update(tk *models.TenagaKerja) error
 	Delete(id uint) error
 	CheckNIKExists(perusahaanID uint, nik string, excludeID uint) (bool, error)
+	UpdateStatus(id uint, status string) error // TAMBAH INI
 }
 
 type tenagaKerjaRepository struct {
@@ -32,6 +33,11 @@ func (r *tenagaKerjaRepository) GetAll(perusahaanID uint, periodeID uint, status
 	// Filter by perusahaan
 	if perusahaanID > 0 {
 		query = query.Where("perusahaan_id = ?", perusahaanID)
+	}
+
+	// Filter by status kepesertaan
+	if status != "" {
+		query = query.Where("status_kepesertaan = ?", status)
 	}
 
 	// Search by nama, NIK, atau KPJ
@@ -82,4 +88,11 @@ func (r *tenagaKerjaRepository) CheckNIKExists(perusahaanID uint, nik string, ex
 
 	err := query.Count(&count).Error
 	return count > 0, err
+}
+
+// TAMBAH METHOD INI
+func (r *tenagaKerjaRepository) UpdateStatus(id uint, status string) error {
+	return r.db.Model(&models.TenagaKerja{}).
+		Where("id = ?", id).
+		Update("status_kepesertaan", status).Error
 }
