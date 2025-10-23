@@ -44,14 +44,17 @@ func main() {
 	// Initialize repositories
 	perusahaanRepo := repositories.NewPerusahaanRepository(database.DB)
 	periodeRepo := repositories.NewPeriodeRepository(database.DB)
+	tenagaKerjaRepo := repositories.NewTenagaKerjaRepository(database.DB)
 
 	// Initialize services
 	perusahaanService := services.NewPerusahaanService(perusahaanRepo)
 	periodeService := services.NewPeriodeService(periodeRepo)
+	tenagaKerjaService := services.NewTenagaKerjaService(tenagaKerjaRepo)
 
 	// Initialize handlers
 	perusahaanHandler := handlers.NewPerusahaanHandler(perusahaanService)
 	periodeHandler := handlers.NewPeriodeHandler(periodeService)
+	tenagaKerjaHandler := handlers.NewTenagaKerjaHandler(tenagaKerjaService)
 
 	app := fiber.New(fiber.Config{
 		AppName: "Mutasi Data API v1.0",
@@ -97,22 +100,20 @@ func main() {
 	periodeRoutes.Delete("/:id", periodeHandler.Delete)
 	periodeRoutes.Put("/:id/finalize", periodeHandler.Finalize)
 
+	// Tenaga Kerja routes
+	tkRoutes := api.Group("/tenaga-kerja")
+	tkRoutes.Get("/", tenagaKerjaHandler.GetAll)
+	tkRoutes.Get("/:id", tenagaKerjaHandler.GetByID)
+	tkRoutes.Post("/", tenagaKerjaHandler.Create)
+	tkRoutes.Put("/:id", tenagaKerjaHandler.Update)
+	tkRoutes.Delete("/:id", tenagaKerjaHandler.Delete)
+
 	port := cfg.Port
 	log.Printf("🚀 Server starting on http://localhost:%s", port)
 	log.Println("📋 Available endpoints:")
-	log.Println("   Perusahaan:")
-	log.Println("   - GET    /api/perusahaan")
-	log.Println("   - GET    /api/perusahaan/:id")
-	log.Println("   - POST   /api/perusahaan")
-	log.Println("   - PUT    /api/perusahaan/:id")
-	log.Println("   - DELETE /api/perusahaan/:id")
-	log.Println("   Periode:")
-	log.Println("   - GET    /api/periode?perusahaan_id=1")
-	log.Println("   - GET    /api/periode/:id")
-	log.Println("   - POST   /api/periode")
-	log.Println("   - PUT    /api/periode/:id")
-	log.Println("   - DELETE /api/periode/:id")
-	log.Println("   - PUT    /api/periode/:id/finalize")
+	log.Println("   Perusahaan: GET, POST, PUT, DELETE /api/perusahaan")
+	log.Println("   Periode: GET, POST, PUT, DELETE /api/periode")
+	log.Println("   Tenaga Kerja: GET, POST, PUT, DELETE /api/tenaga-kerja")
 
 	if err := app.Listen(":" + port); err != nil {
 		log.Fatal(err)
