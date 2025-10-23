@@ -1,6 +1,16 @@
 <template>
   <div class="edit-worker-page">
     <v-container>
+      <!-- Page Header -->
+      <div class="page-header mb-6">
+        <div class="d-flex align-center justify-space-between">
+          <div>
+            <h1 class="page-title">Edit Profil Tenaga Kerja</h1>
+            <p class="page-subtitle">Ubah data profil tenaga kerja</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Breadcrumb -->
       <div class="d-flex align-center mb-4">
         <v-btn

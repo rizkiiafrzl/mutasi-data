@@ -1,6 +1,16 @@
 <template>
   <div class="koreksi-data-page">
     <v-container>
+      <!-- Page Header -->
+      <div class="page-header mb-6">
+        <div class="d-flex align-center justify-space-between">
+          <div>
+            <h1 class="page-title">Koreksi Data Tenaga Kerja</h1>
+            <p class="page-subtitle">Update data tenaga kerja yang sudah ada</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Breadcrumb -->
       <div class="d-flex align-center mb-4">
         <v-btn

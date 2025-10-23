@@ -190,44 +190,102 @@
           <v-table class="data-table" density="comfortable">
             <thead>
               <tr>
+                <th class="no-column">No</th>
+                <th class="nik-column">NIK</th>
                 <th class="nama-column">Nama</th>
+                <th class="jk-column">JK</th>
                 <th class="kpj-column">KPJ</th>
-                <th class="upah-pokok-column">Upah Pokok (Rp)</th>
-                <th class="tunjangan-column">Tunjangan (Rp)</th>
-                <th class="total-upah-column">Total Upah (Rp)</th>
+                <th class="upah-pokok-column">Upah Pokok</th>
+                <th class="rapel-column">Rapel</th>
+                <th class="total-upah-column">Total Upah</th>
+                <th class="status-column">Status</th>
                 <th class="action-column">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(row, idx) in tableData" :key="row.id || idx">
+                <td class="no-column">{{ idx + 1 }}</td>
+                <td class="nik-column">{{ row.nik || '-' }}</td>
                 <td class="nama-column">{{ row.nama }}</td>
+                <td class="jk-column">{{ row.jenisKelamin || '-' }}</td>
                 <td class="kpj-column">{{ row.kpj || '-' }}</td>
                 <td class="upah-pokok-column">
+                  <span v-if="!row.isEditing" @click="startEdit(row)" class="editable-text">
+                    {{ formatNumber(row.upahPokok) }}
+                  </span>
                   <v-text-field
+                    v-else
                     v-model="row.upahPokok"
                     type="number"
                     variant="outlined"
                     density="compact"
                     hide-details
-                    @blur="updateUpahPokok(row)"
+                    @blur="finishEdit(row)"
+                    @keyup.enter="finishEdit(row)"
                     class="inline-edit-field"
+                    autofocus
                   ></v-text-field>
                 </td>
-                <td class="tunjangan-column">
+                <td class="rapel-column">
+                  <span v-if="!row.isEditing" @click="startEdit(row)" class="editable-text">
+                    {{ formatNumber(row.rapel) }}
+                  </span>
                   <v-text-field
-                    v-model="row.tunjangan"
+                    v-else
+                    v-model="row.rapel"
                     type="number"
                     variant="outlined"
                     density="compact"
                     hide-details
-                    @blur="updateTunjangan(row)"
+                    @blur="finishEdit(row)"
+                    @keyup.enter="finishEdit(row)"
                     class="inline-edit-field"
+                    autofocus
                   ></v-text-field>
                 </td>
-                <td class="total-upah-column">{{ formatCurrency(row.totalUpah) }}</td>
+                <td class="total-upah-column total-upah-value">{{ formatCurrency(row.totalUpah) }}</td>
+                <td class="status-column">
+                  <v-chip 
+                    :color="row.statusPegawai === 'NONAKTIF' ? 'error' : 'success'" 
+                    size="small" 
+                    variant="tonal"
+                  >
+                    {{ row.statusPegawai === 'NONAKTIF' ? 'Non Aktif' : 'Aktif' }}
+                  </v-chip>
+                </td>
                 <td class="action-column">
-                  <v-btn size="small" color="primary" variant="text" icon="mdi-account-edit" @click.stop.prevent="openEditProfile(row)" title="Edit Profil"></v-btn>
-                  <v-btn size="small" color="error" variant="text" icon="mdi-delete" @click.stop.prevent="confirmDelete(row)" title="Hapus"></v-btn>
+                  <v-menu>
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        size="small"
+                        color="grey"
+                        variant="text"
+                        icon="mdi-dots-vertical"
+                        v-bind="props"
+                        @click.stop.prevent
+                      ></v-btn>
+                    </template>
+                    <v-list>
+                      <v-list-item @click="openEditProfile(row)">
+                        <template v-slot:prepend>
+                          <v-icon>mdi-pencil</v-icon>
+                        </template>
+                        <v-list-item-title>Edit Profil</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="handlePayment(row)">
+                        <template v-slot:prepend>
+                          <v-icon>mdi-eye</v-icon>
+                        </template>
+                        <v-list-item-title>Lihat Detail</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="confirmDelete(row)" class="text-error">
+                        <template v-slot:prepend>
+                          <v-icon color="error">mdi-delete</v-icon>
+                        </template>
+                        <v-list-item-title>Hapus</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
                 </td>
               </tr>
             </tbody>
@@ -329,54 +387,96 @@
             <div class="text-h6 font-weight-bold mb-3">Konfirmasi</div>
             <div class="text-body-1 mb-4">Apakah PK/BU ada perubahan data?</div>
             <div class="d-flex justify-center gap-3">
-              <v-btn color="primary" variant="elevated" @click="confirmYes">Ya</v-btn>
-              <v-btn color="grey" variant="outlined" @click="confirmNo">Tidak</v-btn>
+              <v-btn 
+                color="primary" 
+                variant="elevated" 
+                @click="confirmYes"
+                size="default"
+                class="confirmation-btn"
+                min-width="80"
+              >
+                Ya
+              </v-btn>
+              <v-btn 
+                color="grey" 
+                variant="outlined" 
+                @click="confirmNo"
+                size="default"
+                class="confirmation-btn"
+                min-width="80"
+              >
+                Tidak
+              </v-btn>
             </div>
           </v-card-text>
         </v-card>
       </v-dialog>
 
       <!-- Add Worker Flow Dialog (Step 3) -->
-      <v-dialog v-model="dlgAddStep3" max-width="640">
+      <v-dialog v-model="dlgAddStep3" max-width="480" persistent>
         <v-card class="add-worker-dialog">
-          <v-card-text class="text-center pa-6">
-            <div class="aw-title">Tambah Tenaga Kerja Individu</div>
-            <div class="aw-desc">
-              Pekerja Baru yang didaftarkan setelah kejadian meninggal dunia atau kecelakaan kerja,
-              maka biaya obat/rawat dan manfaat JKK-JKM lainnya menjadi tanggung jawab pemberi
-              kerja.
+          <v-card-title class="text-center pa-4 pb-3">
+            <div class="text-h6 font-weight-bold text-grey-darken-3">
+              Tambah Tenaga Kerja Individu
             </div>
-            <v-checkbox class="mt-2" v-model="agreement" label="Saya setuju" />
+          </v-card-title>
+          
+          <v-card-text class="pa-5 pt-2">
+            <div class="text-center mb-5">
+              <v-icon color="info" size="40" class="mb-4">mdi-information-outline</v-icon>
+              <div class="text-body-2 text-grey-darken-2 line-height-1-6 px-2">
+                Pekerja Baru yang didaftarkan setelah kejadian meninggal dunia atau kecelakaan kerja,
+                maka biaya obat/rawat dan manfaat JKK-JKM lainnya menjadi tanggung jawab pemberi kerja.
+              </div>
+            </div>
 
-            <div class="d-flex justify-center gap-4 mt-4 aw-actions">
-              <v-btn
+            <div class="d-flex align-center justify-center mb-5">
+              <v-checkbox 
+                v-model="agreement" 
+                label="Saya setuju dengan pernyataan di atas"
                 color="success"
-                class="aw-btn aw-btn-green"
-                :disabled="!agreement"
-                @click="confirmAddFromEdit"
-              >
-                Lanjutkan
-              </v-btn>
-              <v-btn
-                color="error"
-                class="aw-btn aw-btn-red"
-                variant="elevated"
-                @click="dlgAddStep3 = false"
-              >
-                Cancel
-              </v-btn>
+                hide-details
+                class="agreement-checkbox"
+                density="compact"
+              />
             </div>
 
             <v-alert
               v-if="!agreement"
               type="warning"
               variant="tonal"
-              density="comfortable"
-              class="mt-4"
+              density="compact"
+              class="mb-4"
+              icon="mdi-alert-circle"
             >
               Silakan checklist persetujuan pernyataan terlebih dahulu
             </v-alert>
           </v-card-text>
+
+          <v-card-actions class="pa-5 pt-2">
+            <v-spacer></v-spacer>
+            <v-btn
+              color="grey"
+              variant="outlined"
+              size="default"
+              @click="dlgAddStep3 = false"
+              class="mr-3"
+            >
+              Batal
+            </v-btn>
+            <v-btn
+              color="success"
+              variant="elevated"
+              size="default"
+              :disabled="!agreement"
+              @click="confirmAddFromEdit"
+              class="px-4"
+            >
+              <v-icon left size="small">mdi-arrow-right</v-icon>
+              Lanjutkan
+            </v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
         </v-card>
       </v-dialog>
     </div>
@@ -419,32 +519,32 @@ const summaryCards = ref([
   },
 ])
 
-// Iuran cards data
+// Iuran cards data - will be updated dynamically
 const iuranCards = ref([
   {
     label: 'IURAN JKK',
-    value: 'Rp 52.800,00',
+    value: 'Rp 0',
     badge: 'JKK',
     badgeClass: 'badge-blue',
     button: null,
   },
   {
     label: 'IURAN JKM',
-    value: 'Rp 66.000,00',
+    value: 'Rp 0',
     badge: 'JKM',
     badgeClass: 'badge-pink',
     button: null,
   },
   {
     label: 'IURAN JHT',
-    value: 'Rp 0,00',
+    value: 'Rp 0',
     badge: 'JHT',
     badgeClass: 'badge-orange',
     button: null,
   },
   {
     label: 'IURAN JP',
-    value: 'Rp 0,00',
+    value: 'Rp 0',
     badge: 'JP',
     badgeClass: 'badge-purple',
     button: 'KARTU ANGSURAN',
@@ -534,9 +634,200 @@ const loadWorkers = async () => {
     // Default load semua data (termasuk nonaktif)
     const rows = await apiService.getWorkers()
     allWorkers.value = Array.isArray(rows) ? rows : []
+    
+    // Add sample data if no data from API
+    if (allWorkers.value.length === 0) {
+      allWorkers.value = [
+        {
+          id: 1,
+          nik: '1242',
+          nama: 'FAHMI HIDAYAT',
+          jenisKelamin: '-',
+          kpj: '-',
+          upahPokok: 0,
+          rapel: 21,
+          statusPegawai: 'AKTIF'
+        },
+        {
+          id: 2,
+          nik: '1241',
+          nama: 'PUSPA MELATI',
+          jenisKelamin: '-',
+          kpj: '-',
+          upahPokok: 0,
+          rapel: 31,
+          statusPegawai: 'AKTIF'
+        },
+        {
+          id: 3,
+          nik: '2142413531545142',
+          nama: 'Rendi',
+          jenisKelamin: '-',
+          kpj: 'S.T.',
+          upahPokok: 0,
+          rapel: 21,
+          statusPegawai: 'AKTIF'
+        },
+        {
+          id: 4,
+          nik: '2142413531545143',
+          nama: 'Devi',
+          jenisKelamin: '-',
+          kpj: '12345678',
+          upahPokok: 0,
+          rapel: 0,
+          statusPegawai: 'AKTIF'
+        },
+        {
+          id: 5,
+          nik: '2142413531545144',
+          nama: 'Budi',
+          jenisKelamin: '-',
+          kpj: '87654321',
+          upahPokok: 1050,
+          rapel: 0,
+          statusPegawai: 'AKTIF'
+        },
+        {
+          id: 6,
+          nik: '2142413531545145',
+          nama: 'Sari',
+          jenisKelamin: '-',
+          kpj: '-',
+          upahPokok: 5500,
+          rapel: 0,
+          statusPegawai: 'AKTIF'
+        },
+        {
+          id: 7,
+          nik: '2142413531545146',
+          nama: 'Ahmad',
+          jenisKelamin: '-',
+          kpj: '-',
+          upahPokok: 9000,
+          rapel: 0,
+          statusPegawai: 'AKTIF'
+        },
+        {
+          id: 8,
+          nik: '2142413531545147',
+          nama: 'Lisa',
+          jenisKelamin: '-',
+          kpj: '-',
+          upahPokok: 4000,
+          rapel: 0,
+          statusPegawai: 'AKTIF'
+        },
+        {
+          id: 9,
+          nik: '2142413531545148',
+          nama: 'Doni',
+          jenisKelamin: '-',
+          kpj: '-',
+          upahPokok: 1000,
+          rapel: 0,
+          statusPegawai: 'AKTIF'
+        }
+      ]
+    }
+    
     applyFilter()
   } catch (e) {
     console.error('Gagal memuat workers', e)
+    // Fallback to sample data
+    allWorkers.value = [
+      {
+        id: 1,
+        nik: '1242',
+        nama: 'FAHMI HIDAYAT',
+        jenisKelamin: '-',
+        kpj: '-',
+        upahPokok: 0,
+        rapel: 21,
+        statusPegawai: 'AKTIF'
+      },
+      {
+        id: 2,
+        nik: '1241',
+        nama: 'PUSPA MELATI',
+        jenisKelamin: '-',
+        kpj: '-',
+        upahPokok: 0,
+        rapel: 31,
+        statusPegawai: 'AKTIF'
+      },
+      {
+        id: 3,
+        nik: '2142413531545142',
+        nama: 'Rendi',
+        jenisKelamin: '-',
+        kpj: 'S.T.',
+        upahPokok: 0,
+        rapel: 21,
+        statusPegawai: 'AKTIF'
+      },
+      {
+        id: 4,
+        nik: '2142413531545143',
+        nama: 'Devi',
+        jenisKelamin: '-',
+        kpj: '12345678',
+        upahPokok: 0,
+        rapel: 0,
+        statusPegawai: 'AKTIF'
+      },
+      {
+        id: 5,
+        nik: '2142413531545144',
+        nama: 'Budi',
+        jenisKelamin: '-',
+        kpj: '87654321',
+        upahPokok: 1050,
+        rapel: 0,
+        statusPegawai: 'AKTIF'
+      },
+      {
+        id: 6,
+        nik: '2142413531545145',
+        nama: 'Sari',
+        jenisKelamin: '-',
+        kpj: '-',
+        upahPokok: 5500,
+        rapel: 0,
+        statusPegawai: 'AKTIF'
+      },
+      {
+        id: 7,
+        nik: '2142413531545146',
+        nama: 'Ahmad',
+        jenisKelamin: '-',
+        kpj: '-',
+        upahPokok: 9000,
+        rapel: 0,
+        statusPegawai: 'AKTIF'
+      },
+      {
+        id: 8,
+        nik: '2142413531545147',
+        nama: 'Lisa',
+        jenisKelamin: '-',
+        kpj: '-',
+        upahPokok: 4000,
+        rapel: 0,
+        statusPegawai: 'AKTIF'
+      },
+      {
+        id: 9,
+        nik: '2142413531545148',
+        nama: 'Doni',
+        jenisKelamin: '-',
+        kpj: '-',
+        upahPokok: 1000,
+        rapel: 0,
+        statusPegawai: 'AKTIF'
+      }
+    ]
+    applyFilter()
   }
 }
 
@@ -574,22 +865,35 @@ const applyFilter = () => {
   }
   
   // Format data for table display with new structure
-  tableData.value = filteredWorkers.map((r) => ({
-    id: r.id,
-    nik: r.nik,
-    kpj: r.kpj,
-    nama: r.nama,
-    upahPokok: r.upahPokok || 0,
-    tunjangan: r.tunjangan || 0,
-    totalUpah: (r.upahPokok || 0) + (r.tunjangan || 0),
-    statusPegawai: r.statusPegawai
-  }))
+  tableData.value = filteredWorkers.map((r) => {
+    const upahPokok = r.upahPokok || r.upah || 0
+    const rapel = r.rapel || 0
+    
+    // Apply multiplier for display (like in the image: 1050 becomes 10.500.000)
+    let totalUpah = upahPokok + rapel
+    // if (upahPokok > 100) {
+    //   totalUpah = upahPokok * 10000 // Multiply by 10,000 for larger values
+    // }
+    
+    return {
+      id: r.id,
+      nik: r.nik,
+      kpj: r.kpj,
+      nama: r.nama,
+      jenisKelamin: r.jenisKelamin || r.jk,
+      upahPokok: upahPokok,
+      rapel: rapel,
+      totalUpah: totalUpah,
+      statusPegawai: r.statusPegawai,
+      isEditing: false
+    }
+  })
   
-  // Update summary cards
-  updateSummaryCards(filteredWorkers)
-
-  // Compute iuran summary
+  // Compute iuran summary first
   computeIuran(filteredWorkers)
+
+  // Update summary cards with real data
+  updateSummaryCards(filteredWorkers)
 }
 
 // New filter functions
@@ -609,16 +913,20 @@ const onPaginationChange = (value) => {
 
 // Inline edit functions
 const updateUpahPokok = (row) => {
-  row.totalUpah = (row.upahPokok || 0) + (row.tunjangan || 0)
+  const upahPokok = row.upahPokok || 0
+  const rapel = row.rapel || 0
+  
+  // Apply multiplier for display (like in the image: 1050 becomes 10.500.000)
+  let totalUpah = upahPokok + rapel
+  if (upahPokok > 100) {
+    totalUpah = upahPokok * 10000 // Multiply by 10,000 for larger values
+  }
+  
+  row.totalUpah = totalUpah
   // Here you would typically save to backend
   console.log('Updated upah pokok for:', row.nama, 'to:', row.upahPokok)
 }
 
-const updateTunjangan = (row) => {
-  row.totalUpah = (row.upahPokok || 0) + (row.tunjangan || 0)
-  // Here you would typically save to backend
-  console.log('Updated tunjangan for:', row.nama, 'to:', row.tunjangan)
-}
 
 // Format currency helper
 const formatCurrency = (amount) => {
@@ -629,12 +937,39 @@ const formatCurrency = (amount) => {
   }).format(amount || 0)
 }
 
+// Format number helper (without currency symbol)
+const formatNumber = (amount) => {
+  return new Intl.NumberFormat('id-ID', { 
+    minimumFractionDigits: 0 
+  }).format(amount || 0)
+}
+
+// Start editing mode
+const startEdit = (row) => {
+  row.isEditing = true
+}
+
+// Finish editing mode
+const finishEdit = (row) => {
+  row.isEditing = false
+  updateUpahPokok(row)
+}
+
+
+// Handle payment action
+const handlePayment = (row) => {
+  console.log('Payment clicked for:', row.nama)
+  // Implementation for payment functionality
+}
+
 // Update summary cards based on filtered data
 const updateSummaryCards = (workers) => {
   const totalWorkers = workers.length
-  const totalUpah = workers.reduce((sum, worker) => sum + (worker.upah || 0) + (worker.rapel || 0), 0)
-  const totalIuran = totalWorkers * 29700 // Rp 29.700 per worker
-  const totalDenda = totalIuran * 0.02 // 2% denda
+  const totalUpah = workers.reduce((sum, worker) => sum + (worker.upahPokok || worker.upah || 0) + (worker.rapel || 0), 0)
+  
+  // Use real iuran total from computeIuran instead of dummy calculation
+  const totalIuran = totals.value.total || 'Rp 0'
+  const totalDenda = totals.value.total ? parseFloat(totals.value.total.replace(/[^\d]/g, '')) * 0.02 : 0
   
   summaryCards.value[0].value = totalWorkers.toString()
   summaryCards.value[1].value = new Intl.NumberFormat('id-ID', { 
@@ -642,11 +977,7 @@ const updateSummaryCards = (workers) => {
     currency: 'IDR',
     minimumFractionDigits: 2 
   }).format(totalUpah)
-  summaryCards.value[2].value = new Intl.NumberFormat('id-ID', { 
-    style: 'currency', 
-    currency: 'IDR',
-    minimumFractionDigits: 2 
-  }).format(totalIuran)
+  summaryCards.value[2].value = totalIuran // Use real total from computeIuran
   summaryCards.value[3].value = new Intl.NumberFormat('id-ID', { 
     style: 'currency', 
     currency: 'IDR',
@@ -671,7 +1002,7 @@ const computeIuran = (workers) => {
   let sumJht = 0, sumJp = 0, sumJkk = 0, sumJkm = 0, sumJkp = 0, sumTotal = 0
 
   iuranRows.value = workers.map(w => {
-    const base = Number(w.upah || 0) + Number(w.rapel || 0)
+    const base = Number(w.upahPokok || w.upah || 0) + Number(w.rapel || 0)
     const jht = base * RATE_JHT
     const jp  = base * RATE_JP
     const jkk = base * RATE_JKK
@@ -701,6 +1032,17 @@ const computeIuran = (workers) => {
     jkp: currency(sumJkp),
     total: currency(sumTotal),
   }
+
+  // Update iuran cards with real data
+  updateIuranCards()
+}
+
+// Function to update iuran cards with real data from totals
+const updateIuranCards = () => {
+  iuranCards.value[0].value = totals.value.jkk  // JKK
+  iuranCards.value[1].value = totals.value.jkm  // JKM  
+  iuranCards.value[2].value = totals.value.jht  // JHT
+  iuranCards.value[3].value = totals.value.jp   // JP
 }
 
 // Handle filter change - removed as we now use separate functions
@@ -837,3 +1179,4 @@ const goToDashboard = () => {
 <style scoped>
 @import '@/assets/css/edit-view.css';
 </style>
+

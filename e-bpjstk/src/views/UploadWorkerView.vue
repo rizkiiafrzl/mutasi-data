@@ -1,6 +1,16 @@
 <template>
   <div class="upload-worker-page">
     <v-container>
+      <!-- Page Header -->
+      <div class="page-header mb-6">
+        <div class="d-flex align-center justify-space-between">
+          <div>
+            <h1 class="page-title">Upload Tenaga Kerja Massal</h1>
+            <p class="page-subtitle">Upload data tenaga kerja baru secara massal</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Breadcrumb -->
       <div class="d-flex align-center mb-4">
         <v-btn
@@ -275,7 +285,7 @@ onMounted(() => {
 })
 
 const goBack = () => {
-  router.push('/dashboard')
+  router.back()
 }
 
 const onFileSelected = (file) => {

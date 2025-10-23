@@ -53,12 +53,9 @@ import { computed } from 'vue'
 
 const route = useRoute()
 
-// Hide header on auth pages, dashboard, and edit pages
+// Hide header everywhere (remove global top bar)
 const showHeader = computed(() => {
-  const authRoutes = ['/login', '/register']
-  const dashboardRoutes = ['/dashboard']
-  const editRoutes = ['/edit']
-  return !authRoutes.includes(route.path) && !dashboardRoutes.includes(route.path) && !route.path.startsWith('/edit')
+  return false
 })
 
 // Menu items untuk navigation

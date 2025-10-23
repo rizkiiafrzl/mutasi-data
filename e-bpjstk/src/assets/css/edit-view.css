@@ -589,3 +589,79 @@
     height: 28px;
   }
 }
+
+/* Add Worker Dialog Styling */
+.add-worker-dialog {
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.add-worker-dialog .v-card-title {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.add-worker-dialog .v-card-text {
+  background-color: #ffffff;
+}
+
+.add-worker-dialog .v-card-actions {
+  background-color: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.agreement-checkbox {
+  font-weight: 500;
+}
+
+.agreement-checkbox .v-label {
+  font-size: 0.95rem;
+  color: #424242;
+}
+
+.line-height-1-6 {
+  line-height: 1.6;
+}
+
+/* Confirmation Dialog Button Styling */
+.confirmation-btn {
+  height: 40px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.confirmation-btn .v-btn__content {
+  font-size: 0.9rem;
+}
+
+/* Mobile Responsive for Add Worker Dialog */
+@media (max-width: 768px) {
+  .add-worker-dialog .v-card-title {
+    padding: 16px 12px 12px 12px;
+  }
+  
+  .add-worker-dialog .v-card-text {
+    padding: 16px 12px;
+  }
+  
+  .add-worker-dialog .v-card-actions {
+    padding: 16px 12px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .add-worker-dialog .v-card-actions .v-btn {
+    width: 100%;
+  }
+  
+  .add-worker-dialog .text-center.mb-5 {
+    margin-bottom: 16px;
+  }
+  
+  .add-worker-dialog .mb-4 {
+    margin-bottom: 12px;
+  }
+}

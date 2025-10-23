@@ -1,7 +1,33 @@
 <template>
   <div class="add-worker-page">
     <v-container>
-      <h2 class="text-h5 mb-4">Data Tenaga Kerja</h2>
+      <!-- Page Header -->
+      <div class="page-header mb-6">
+        <div class="d-flex align-center justify-space-between">
+          <div>
+            <h1 class="page-title">Tambah Tenaga Kerja Individu</h1>
+            <p class="page-subtitle">Formulir pendaftaran tenaga kerja baru</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breadcrumb Header -->
+      <div class="d-flex align-center mb-4 breadcrumb-header">
+        <v-btn
+          variant="text"
+          color="success"
+          prepend-icon="mdi-arrow-left"
+          @click="goBack"
+          class="mr-2 breadcrumb-back"
+        >
+          Kembali
+        </v-btn>
+        <v-breadcrumbs :items="breadcrumbs" class="pa-0 breadcrumb-trail">
+          <template v-slot:divider>
+            <v-icon>mdi-chevron-right</v-icon>
+          </template>
+        </v-breadcrumbs>
+      </div>
 
       <!-- Precheck Dialog: pilihan + konten muncul di bawah tanpa next step -->
       <v-dialog v-model="dlgPrecheck" max-width="780" persistent>
@@ -272,6 +298,16 @@ const precheckTouched = ref(false)
 // Success dialog
 const dlgSuccess = ref(false)
 const dlgConsent = ref(false)
+
+// Breadcrumbs
+const breadcrumbs = ref([
+  { title: 'Data Tenaga Kerja', disabled: false, href: '/dashboard' },
+  { title: 'Tambah Individu', disabled: true },
+])
+
+const goBack = () => {
+  router.back()
+}
 
 onMounted(async () => {
   if (props.id && String(props.id).length > 0) {

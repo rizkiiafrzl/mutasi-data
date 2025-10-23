@@ -7,6 +7,7 @@ import (
     "fmt"
     "io"
     "net/http"
+    "strconv"
     "time"
 
     "farm-management-backend/config"
@@ -14,6 +15,7 @@ import (
     "farm-management-backend/models"
 
     "github.com/gofiber/fiber/v2"
+    "github.com/golang-jwt/jwt/v4"
     "golang.org/x/oauth2"
     "golang.org/x/oauth2/google"
 )
@@ -122,7 +124,7 @@ func GoogleLoginCallback(db *database.DB) fiber.Handler {
         }
 
         // Issue JWT
-        jwtToken, err := generateJWT(user.ID.String())
+        jwtToken, err := generateJWTToken(user.ID.String())
         if err != nil {
             return c.Status(500).JSON(fiber.Map{"error": "failed to generate token"})
         }
@@ -132,6 +134,21 @@ func GoogleLoginCallback(db *database.DB) fiber.Handler {
         redirectURL := fmt.Sprintf("%s/login?token=%s", frontend, jwtToken)
         return c.Redirect(redirectURL, http.StatusTemporaryRedirect)
     }
+}
+
+// generateJWTToken generates JWT token for user
+func generateJWTToken(userID interface{}) (string, error) {
+    expireHours, _ := strconv.Atoi(config.GetEnv("JWT_EXPIRE_HOURS", "24"))
+    expireTime := time.Now().Add(time.Duration(expireHours) * time.Hour)
+
+    claims := jwt.MapClaims{
+        "user_id": userID,
+        "exp":     expireTime.Unix(),
+        "iat":     time.Now().Unix(),
+    }
+
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    return token.SignedString([]byte(config.GetEnv("JWT_SECRET", "your-secret-key")))
 }
 
 
