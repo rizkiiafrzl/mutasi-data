@@ -43,12 +43,15 @@ func main() {
 
 	// Initialize repositories
 	perusahaanRepo := repositories.NewPerusahaanRepository(database.DB)
+	periodeRepo := repositories.NewPeriodeRepository(database.DB)
 
 	// Initialize services
 	perusahaanService := services.NewPerusahaanService(perusahaanRepo)
+	periodeService := services.NewPeriodeService(periodeRepo)
 
 	// Initialize handlers
 	perusahaanHandler := handlers.NewPerusahaanHandler(perusahaanService)
+	periodeHandler := handlers.NewPeriodeHandler(periodeService)
 
 	app := fiber.New(fiber.Config{
 		AppName: "Mutasi Data API v1.0",
@@ -85,14 +88,31 @@ func main() {
 	perusahaanRoutes.Put("/:id", perusahaanHandler.Update)
 	perusahaanRoutes.Delete("/:id", perusahaanHandler.Delete)
 
+	// Periode routes
+	periodeRoutes := api.Group("/periode")
+	periodeRoutes.Get("/", periodeHandler.GetAll)
+	periodeRoutes.Get("/:id", periodeHandler.GetByID)
+	periodeRoutes.Post("/", periodeHandler.Create)
+	periodeRoutes.Put("/:id", periodeHandler.Update)
+	periodeRoutes.Delete("/:id", periodeHandler.Delete)
+	periodeRoutes.Put("/:id/finalize", periodeHandler.Finalize)
+
 	port := cfg.Port
 	log.Printf("🚀 Server starting on http://localhost:%s", port)
 	log.Println("📋 Available endpoints:")
-	log.Println("   GET    /api/perusahaan")
-	log.Println("   GET    /api/perusahaan/:id")
-	log.Println("   POST   /api/perusahaan")
-	log.Println("   PUT    /api/perusahaan/:id")
-	log.Println("   DELETE /api/perusahaan/:id")
+	log.Println("   Perusahaan:")
+	log.Println("   - GET    /api/perusahaan")
+	log.Println("   - GET    /api/perusahaan/:id")
+	log.Println("   - POST   /api/perusahaan")
+	log.Println("   - PUT    /api/perusahaan/:id")
+	log.Println("   - DELETE /api/perusahaan/:id")
+	log.Println("   Periode:")
+	log.Println("   - GET    /api/periode?perusahaan_id=1")
+	log.Println("   - GET    /api/periode/:id")
+	log.Println("   - POST   /api/periode")
+	log.Println("   - PUT    /api/periode/:id")
+	log.Println("   - DELETE /api/periode/:id")
+	log.Println("   - PUT    /api/periode/:id/finalize")
 
 	if err := app.Listen(":" + port); err != nil {
 		log.Fatal(err)
