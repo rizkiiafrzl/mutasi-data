@@ -639,18 +639,22 @@
   transform: scale(1.1);
 }
 
-/* Action Menu Items */
+/* Action Menu Items - Default styling */
 .action-menu-item {
   font-size: var(--font-size-sm);
   padding: 8px 16px;
-  color: #dc2626 !important; /* Red color to match action buttons */
+  color: #dc2626 !important; /* Default red color for edit/delete actions */
   transition: all 0.3s ease;
+  min-width: 120px; /* Ensure consistent width */
+  display: flex;
+  align-items: center;
 }
 
 .action-menu-item .v-icon {
   margin-right: 8px;
-  color: #dc2626 !important; /* Red color for icons */
+  color: #dc2626 !important; /* Default red color for icons */
   transition: all 0.3s ease;
+  flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
 .action-menu-item:hover {
@@ -664,11 +668,55 @@
   transform: scale(1.1);
 }
 
+/* Green action items (Cetak, Download Excel) */
+.action-menu-item.green-action {
+  color: #16a34a !important; /* Green color for print/download actions */
+}
+
+.action-menu-item.green-action .v-icon {
+  color: #16a34a !important; /* Green color for icons */
+}
+
+.action-menu-item.green-action:hover {
+  background: rgba(22, 163, 74, 0.1) !important; /* Light green hover background */
+  color: #15803d !important; /* Darker green on hover */
+}
+
+.action-menu-item.green-action:hover .v-icon {
+  color: #15803d !important; /* Darker green for icons on hover */
+}
+
+/* Action menu container improvements */
+.v-list {
+  min-width: 160px; /* Ensure consistent menu width */
+}
+
+.v-list-item {
+  padding: 8px 16px !important;
+  min-height: 40px !important; /* Consistent height for all items */
+}
+
+.v-list-item-title {
+  font-weight: 500 !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: 1.4 !important;
+}
+
+/* Ensure consistent spacing between icon and text */
+.v-list-item .v-list-item__prepend {
+  margin-right: 12px !important;
+}
+
 /* Responsive action menu item font sizes */
 @media (max-width: 480px) {
   .action-menu-item {
     font-size: var(--font-size-xs);
     padding: 6px 12px;
+    min-width: 100px;
+  }
+  
+  .v-list {
+    min-width: 140px;
   }
 }
 

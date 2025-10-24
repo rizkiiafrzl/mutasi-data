@@ -134,7 +134,7 @@
                         <template v-if="row.status === 'Posting' || row.status === 'Finalisasi'">
                           <v-list-item 
                             @click="onPrint(row)"
-                            class="action-menu-item"
+                            class="action-menu-item green-action"
                           >
                             <template v-slot:prepend>
                               <v-icon>mdi-printer</v-icon>
@@ -143,7 +143,7 @@
                           </v-list-item>
                           <v-list-item 
                             @click="onDownload(row)"
-                            class="action-menu-item"
+                            class="action-menu-item green-action"
                           >
                             <template v-slot:prepend>
                               <v-icon>mdi-download</v-icon>

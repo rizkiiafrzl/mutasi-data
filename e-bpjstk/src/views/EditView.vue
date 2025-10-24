@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <!-- Summary Cards -->
+      <!-- Summary Cards -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-number">{{ summaryCards[0].value }}</div>
@@ -27,18 +27,18 @@
       <div class="financial-card">
         <div class="financial-amount neutral">{{ summaryCards[1].value }}</div>
         <div class="financial-label">{{ summaryCards[1].label }}</div>
-      </div>
+                </div>
 
       <div class="financial-card">
         <div class="financial-amount negative">{{ summaryCards[2].value }}</div>
         <div class="financial-label">{{ summaryCards[2].label }}</div>
-      </div>
+                </div>
 
       <div class="financial-card">
         <div class="financial-amount negative">{{ summaryCards[3].value }}</div>
         <div class="financial-label">{{ summaryCards[3].label }}</div>
         <button class="detail-btn" @click="handleDetailClick">Detail</button>
-      </div>
+              </div>
     </div>
 
     <!-- Program Contribution Section -->
@@ -56,24 +56,24 @@
       </div>
     </div>
 
-    <!-- Pengelolaan Periode Section -->
+      <!-- Pengelolaan Periode Section -->
     <div class="pengelolaan-section">
       <h2 class="pengelolaan-title">Pengelolaan Periode Pelaporan Bulan Juli 2025</h2>
 
-      <!-- Action Buttons -->
-      <div class="action-buttons-container">
+              <!-- Action Buttons -->
+              <div class="action-buttons-container">
         <template v-for="(btn, index) in actionButtons" :key="index">
           <!-- Regular Button -->
-          <v-btn
+                <v-btn
             v-if="!btn.hasDropdown"
-            :color="btn.color"
-            variant="elevated"
-            :prepend-icon="btn.icon"
-            class="action-btn"
-            @click="handleActionClick(btn.action)"
-          >
-            {{ btn.label }}
-          </v-btn>
+                  :color="btn.color"
+                  variant="elevated"
+                  :prepend-icon="btn.icon"
+                  class="action-btn"
+                  @click="handleActionClick(btn.action)"
+                >
+                  {{ btn.label }}
+                </v-btn>
           
           <!-- Upload Massal Button with Dropdown -->
           <v-menu v-else>
@@ -105,11 +105,11 @@
             </v-list>
           </v-menu>
         </template>
-      </div>
+              </div>
 
       <!-- Tab Navigation -->
       <div class="tab-navigation mb-4">
-        <v-btn
+                  <v-btn
           :color="activeTab === 'daftar' ? 'success' : 'grey'"
           :variant="activeTab === 'daftar' ? 'elevated' : 'outlined'"
           class="tab-btn"
@@ -133,30 +133,30 @@
         <div class="d-flex align-center justify-center mb-6 filter-search-container">
           <div class="d-flex align-center gap-3 flex-wrap">
             <!-- Status Filter -->
-            <v-select
+                  <v-select
               :items="statusOptions"
-              density="comfortable"
-              hide-details
-              variant="outlined"
-              class="filter-select"
+                    density="comfortable"
+                    hide-details
+                    variant="outlined"
+                    class="filter-select"
               v-model="selectedStatus"
               @update:model-value="onStatusChange"
               label="Status"
               style="min-width: 150px;"
-            ></v-select>
+                  ></v-select>
             
             <!-- Search Field -->
-            <v-text-field
+                  <v-text-field
               v-model="searchQuery"
               placeholder="Cari NIK/Nama/KPJ..."
-              density="comfortable"
-              hide-details
-              variant="outlined"
-              class="search-field"
+                    density="comfortable"
+                    hide-details
+                    variant="outlined"
+                    class="search-field"
               prepend-inner-icon="mdi-magnify"
               @input="onSearchChange"
               style="min-width: 200px;"
-            ></v-text-field>
+                  ></v-text-field>
             
             <!-- Items Per Page -->
             <v-select
@@ -172,41 +172,41 @@
             ></v-select>
             
             <!-- Refresh Button -->
-            <v-btn
-              color="primary"
+                  <v-btn
+                    color="primary"
               variant="outlined"
               prepend-icon="mdi-refresh"
               class="filter-btn"
-              size="default"
+                    size="default"
               @click="loadWorkers"
             >
               Refresh
             </v-btn>
-          </div>
-        </div>
+                </div>
+              </div>
 
-        <!-- Data Table -->
-        <div class="table-responsive table-container">
-          <v-table class="data-table" density="comfortable">
-            <thead>
-              <tr>
+              <!-- Data Table -->
+              <div class="table-responsive table-container">
+                <v-table class="data-table" density="comfortable">
+                  <thead>
+                    <tr>
                 <th class="no-column">No</th>
-                <th class="nik-column">NIK</th>
-                <th class="nama-column">Nama</th>
+                      <th class="nik-column">NIK</th>
+                      <th class="nama-column">Nama</th>
                 <th class="jk-column">JK</th>
                 <th class="kpj-column">KPJ</th>
                 <th class="upah-pokok-column">Upah Pokok</th>
                 <th class="rapel-column">Rapel</th>
                 <th class="total-upah-column">Total Upah</th>
                 <th class="status-column">Status</th>
-                <th class="action-column">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(row, idx) in tableData" :key="row.id || idx">
+                      <th class="action-column">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(row, idx) in tableData" :key="row.id || idx">
                 <td class="no-column">{{ idx + 1 }}</td>
                 <td class="nik-column">{{ row.nik || '-' }}</td>
-                <td class="nama-column">{{ row.nama }}</td>
+                      <td class="nama-column">{{ row.nama }}</td>
                 <td class="jk-column">{{ row.jenisKelamin || '-' }}</td>
                 <td class="kpj-column">{{ row.kpj || '-' }}</td>
                 <td class="upah-pokok-column">
@@ -253,7 +253,7 @@
                     {{ row.statusPegawai === 'NONAKTIF' ? 'Non Aktif' : 'Aktif' }}
                   </v-chip>
                 </td>
-                <td class="action-column">
+                      <td class="action-column">
                   <v-menu>
                     <template v-slot:activator="{ props }">
                       <v-btn
@@ -286,10 +286,15 @@
                       </v-list-item>
                     </v-list>
                   </v-menu>
-                </td>
+                      </td>
               </tr>
             </tbody>
           </v-table>
+          
+          <!-- Pagination Info -->
+          <div class="pagination-info">
+            Menampilkan {{ ((currentPage - 1) * itemsPerPage) + 1 }}-{{ Math.min(currentPage * itemsPerPage, paginatedData.length) }} dari {{ paginatedData.length }} data
+          </div>
         </div>
       </div>
 
@@ -327,35 +332,35 @@
               <td class="font-weight-bold">{{ totals.jkm }}</td>
               <td class="font-weight-bold">{{ totals.jkp }}</td>
               <td class="text-success font-weight-bold">{{ totals.total }}</td>
-            </tr>
-          </tbody>
-        </v-table>
-      </div>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </div>
 
-      <!-- Edit Dialog -->
-      <v-dialog v-model="editing" max-width="520">
-        <v-card>
-          <v-card-title>Edit Data Karyawan</v-card-title>
-          <v-card-text>
-            <v-text-field v-model="editItem.nik" label="NIK" variant="outlined" />
-            <v-text-field v-model="editItem.kpj" label="KPJ" variant="outlined" />
-            <v-text-field v-model="editItem.noPegawai" label="No Pegawai" variant="outlined" />
-            <v-text-field v-model="editItem.nama" label="Nama" variant="outlined" />
-            <v-text-field v-model.number="editItem.upah" label="Upah" variant="outlined" type="number" />
-            <v-text-field v-model.number="editItem.rapel" label="Rapel" variant="outlined" type="number" />
-          </v-card-text>
-          <v-card-actions class="justify-end">
-            <v-btn variant="text" @click="editing = false">Batal</v-btn>
-            <v-btn color="primary" @click="saveEdit">Simpan</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+              <!-- Edit Dialog -->
+              <v-dialog v-model="editing" max-width="520">
+                <v-card>
+                  <v-card-title>Edit Data Karyawan</v-card-title>
+                  <v-card-text>
+                    <v-text-field v-model="editItem.nik" label="NIK" variant="outlined" />
+                    <v-text-field v-model="editItem.kpj" label="KPJ" variant="outlined" />
+                    <v-text-field v-model="editItem.noPegawai" label="No Pegawai" variant="outlined" />
+                    <v-text-field v-model="editItem.nama" label="Nama" variant="outlined" />
+                    <v-text-field v-model.number="editItem.upah" label="Upah" variant="outlined" type="number" />
+                    <v-text-field v-model.number="editItem.rapel" label="Rapel" variant="outlined" type="number" />
+                  </v-card-text>
+                  <v-card-actions class="justify-end">
+                    <v-btn variant="text" @click="editing = false">Batal</v-btn>
+                    <v-btn color="primary" @click="saveEdit">Simpan</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
 
-      <!-- Table Footer -->
-      <div class="d-flex justify-space-between align-center mt-6 table-footer">
-        <div class="text-caption text-grey-darken-1">Showing 10 entries</div>
-        <div class="text-caption text-grey-darken-1">2018 © BPJS Ketenagakerjaan.</div>
-      </div>
+              <!-- Table Footer -->
+              <div class="d-flex justify-space-between align-center mt-6 table-footer">
+                <div class="text-caption text-grey-darken-1">Showing 10 entries</div>
+                <div class="text-caption text-grey-darken-1">2018 © BPJS Ketenagakerjaan.</div>
+              </div>
 
       <!-- Notification Modal -->
       <v-dialog v-model="showNotificationModal" persistent max-width="500">
@@ -425,9 +430,9 @@
             <div class="text-center mb-5">
               <v-icon color="info" size="40" class="mb-4">mdi-information-outline</v-icon>
               <div class="text-body-2 text-grey-darken-2 line-height-1-6 px-2">
-                Pekerja Baru yang didaftarkan setelah kejadian meninggal dunia atau kecelakaan kerja,
+              Pekerja Baru yang didaftarkan setelah kejadian meninggal dunia atau kecelakaan kerja,
                 maka biaya obat/rawat dan manfaat JKK-JKM lainnya menjadi tanggung jawab pemberi kerja.
-              </div>
+            </div>
             </div>
 
             <div class="d-flex align-center justify-center mb-5">
@@ -613,7 +618,9 @@ const activeTab = ref('daftar')
 // Enhanced filter state according to new specifications
 const selectedStatus = ref('aktif')
 const searchQuery = ref('')
-const itemsPerPage = ref(25)
+const itemsPerPage = ref(10) // Changed default to 10
+const currentPage = ref(1) // Add current page tracking
+const paginatedData = ref([]) // Add paginated data
 
 const statusOptions = [
   { title: 'Semua Status', value: 'semua' },
@@ -631,102 +638,77 @@ const paginationOptions = [
 // Load workers data
 const loadWorkers = async () => {
   try {
-    // Default load semua data (termasuk nonaktif)
-    const rows = await apiService.getWorkers()
+    // Load semua data (aktif + nonaktif)
+    const rows = await apiService.getAllWorkers()
     allWorkers.value = Array.isArray(rows) ? rows : []
+    
+    console.log('Loaded workers:', allWorkers.value.length)
+    console.log('Aktif workers:', allWorkers.value.filter(w => w.status === 'aktif').length)
+    console.log('Nonaktif workers:', allWorkers.value.filter(w => w.status === 'nonaktif').length)
     
     // Add sample data if no data from API
     if (allWorkers.value.length === 0) {
       allWorkers.value = [
         {
           id: 1,
-          nik: '1242',
-          nama: 'FAHMI HIDAYAT',
-          jenisKelamin: '-',
-          kpj: '-',
-          upahPokok: 0,
-          rapel: 21,
-          statusPegawai: 'AKTIF'
+          nik: '3201234567890123',
+          nama: 'Ahmad Wijaya',
+          jenisKelamin: 'Laki-laki',
+          kpj: '1234567890',
+          upahPokok: 5000000,
+          rapel: 500000,
+          statusPegawai: 'AKTIF',
+          status: 'aktif'
         },
         {
           id: 2,
-          nik: '1241',
-          nama: 'PUSPA MELATI',
-          jenisKelamin: '-',
-          kpj: '-',
-          upahPokok: 0,
-          rapel: 31,
-          statusPegawai: 'AKTIF'
+          nik: '3201234567890124',
+          nama: 'Siti Nurhaliza',
+          jenisKelamin: 'Perempuan',
+          kpj: '1234567891',
+          upahPokok: 4500000,
+          rapel: 300000,
+          statusPegawai: 'AKTIF',
+          status: 'aktif'
         },
         {
           id: 3,
-          nik: '2142413531545142',
-          nama: 'Rendi',
-          jenisKelamin: '-',
-          kpj: 'S.T.',
+          nik: '',
+          nama: 'John Smith',
+          jenisKelamin: 'Laki-laki',
+          kpj: '',
+          upahPokok: 6000000,
+          rapel: 0,
+          statusPegawai: 'AKTIF',
+          status: 'aktif',
+          passportNo: 'A1234567'
+        },
+        {
+          id: 101,
+          nik: '3201234567890101',
+          nama: 'Lina Susanti',
+          jenisKelamin: 'Perempuan',
+          kpj: '1234567001',
           upahPokok: 0,
-          rapel: 21,
-          statusPegawai: 'AKTIF'
+          rapel: 0,
+          statusPegawai: 'NONAKTIF',
+          status: 'nonaktif',
+          tanggalNonaktif: '2024-06-30',
+          alasanNonaktif: 'PHK'
         },
         {
-          id: 4,
-          nik: '2142413531545143',
-          nama: 'Devi',
-          jenisKelamin: '-',
-          kpj: '12345678',
+          id: 102,
+          nik: '',
+          nama: 'James Wilson',
+          jenisKelamin: 'Laki-laki',
+          kpj: '',
           upahPokok: 0,
           rapel: 0,
-          statusPegawai: 'AKTIF'
-        },
-        {
-          id: 5,
-          nik: '2142413531545144',
-          nama: 'Budi',
-          jenisKelamin: '-',
-          kpj: '87654321',
-          upahPokok: 1050,
-          rapel: 0,
-          statusPegawai: 'AKTIF'
-        },
-        {
-          id: 6,
-          nik: '2142413531545145',
-          nama: 'Sari',
-          jenisKelamin: '-',
-          kpj: '-',
-          upahPokok: 5500,
-          rapel: 0,
-          statusPegawai: 'AKTIF'
-        },
-        {
-          id: 7,
-          nik: '2142413531545146',
-          nama: 'Ahmad',
-          jenisKelamin: '-',
-          kpj: '-',
-          upahPokok: 9000,
-          rapel: 0,
-          statusPegawai: 'AKTIF'
-        },
-        {
-          id: 8,
-          nik: '2142413531545147',
-          nama: 'Lisa',
-          jenisKelamin: '-',
-          kpj: '-',
-          upahPokok: 4000,
-          rapel: 0,
-          statusPegawai: 'AKTIF'
-        },
-        {
-          id: 9,
-          nik: '2142413531545148',
-          nama: 'Doni',
-          jenisKelamin: '-',
-          kpj: '-',
-          upahPokok: 1000,
-          rapel: 0,
-          statusPegawai: 'AKTIF'
+          statusPegawai: 'NONAKTIF',
+          status: 'nonaktif',
+          passportNo: 'E8888888',
+          tanggalNonaktif: '2024-07-15',
+          alasanNonaktif: 'Kontrak Berakhir'
         }
       ]
     }
@@ -734,97 +716,68 @@ const loadWorkers = async () => {
     applyFilter()
   } catch (e) {
     console.error('Gagal memuat workers', e)
-    // Fallback to sample data
+    // Fallback to sample data with both aktif and nonaktif
     allWorkers.value = [
       {
         id: 1,
-        nik: '1242',
-        nama: 'FAHMI HIDAYAT',
-        jenisKelamin: '-',
-        kpj: '-',
-        upahPokok: 0,
-        rapel: 21,
-        statusPegawai: 'AKTIF'
+        nik: '3201234567890123',
+        nama: 'Ahmad Wijaya',
+        jenisKelamin: 'Laki-laki',
+        kpj: '1234567890',
+        upahPokok: 5000000,
+        rapel: 500000,
+        statusPegawai: 'AKTIF',
+        status: 'aktif'
       },
       {
         id: 2,
-        nik: '1241',
-        nama: 'PUSPA MELATI',
-        jenisKelamin: '-',
-        kpj: '-',
-        upahPokok: 0,
-        rapel: 31,
-        statusPegawai: 'AKTIF'
+        nik: '3201234567890124',
+        nama: 'Siti Nurhaliza',
+        jenisKelamin: 'Perempuan',
+        kpj: '1234567891',
+        upahPokok: 4500000,
+        rapel: 300000,
+        statusPegawai: 'AKTIF',
+        status: 'aktif'
       },
       {
         id: 3,
-        nik: '2142413531545142',
-        nama: 'Rendi',
-        jenisKelamin: '-',
-        kpj: 'S.T.',
+        nik: '',
+        nama: 'John Smith',
+        jenisKelamin: 'Laki-laki',
+        kpj: '',
+        upahPokok: 6000000,
+        rapel: 0,
+        statusPegawai: 'AKTIF',
+        status: 'aktif',
+        passportNo: 'A1234567'
+      },
+      {
+        id: 101,
+        nik: '3201234567890101',
+        nama: 'Lina Susanti',
+        jenisKelamin: 'Perempuan',
+        kpj: '1234567001',
         upahPokok: 0,
-        rapel: 21,
-        statusPegawai: 'AKTIF'
+        rapel: 0,
+        statusPegawai: 'NONAKTIF',
+        status: 'nonaktif',
+        tanggalNonaktif: '2024-06-30',
+        alasanNonaktif: 'PHK'
       },
       {
-        id: 4,
-        nik: '2142413531545143',
-        nama: 'Devi',
-        jenisKelamin: '-',
-        kpj: '12345678',
+        id: 102,
+        nik: '',
+        nama: 'James Wilson',
+        jenisKelamin: 'Laki-laki',
+        kpj: '',
         upahPokok: 0,
         rapel: 0,
-        statusPegawai: 'AKTIF'
-      },
-      {
-        id: 5,
-        nik: '2142413531545144',
-        nama: 'Budi',
-        jenisKelamin: '-',
-        kpj: '87654321',
-        upahPokok: 1050,
-        rapel: 0,
-        statusPegawai: 'AKTIF'
-      },
-      {
-        id: 6,
-        nik: '2142413531545145',
-        nama: 'Sari',
-        jenisKelamin: '-',
-        kpj: '-',
-        upahPokok: 5500,
-        rapel: 0,
-        statusPegawai: 'AKTIF'
-      },
-      {
-        id: 7,
-        nik: '2142413531545146',
-        nama: 'Ahmad',
-        jenisKelamin: '-',
-        kpj: '-',
-        upahPokok: 9000,
-        rapel: 0,
-        statusPegawai: 'AKTIF'
-      },
-      {
-        id: 8,
-        nik: '2142413531545147',
-        nama: 'Lisa',
-        jenisKelamin: '-',
-        kpj: '-',
-        upahPokok: 4000,
-        rapel: 0,
-        statusPegawai: 'AKTIF'
-      },
-      {
-        id: 9,
-        nik: '2142413531545148',
-        nama: 'Doni',
-        jenisKelamin: '-',
-        kpj: '-',
-        upahPokok: 1000,
-        rapel: 0,
-        statusPegawai: 'AKTIF'
+        statusPegawai: 'NONAKTIF',
+        status: 'nonaktif',
+        passportNo: 'E8888888',
+        tanggalNonaktif: '2024-07-15',
+        alasanNonaktif: 'Kontrak Berakhir'
       }
     ]
     applyFilter()
@@ -842,12 +795,12 @@ const applyFilter = () => {
       break
     case 'aktif':
       filteredWorkers = allWorkers.value.filter(worker => 
-        worker.statusPegawai !== "NONAKTIF"
+        worker.statusPegawai !== "NONAKTIF" && worker.status !== "nonaktif"
       )
       break
     case 'non-aktif':
       filteredWorkers = allWorkers.value.filter(worker => 
-        worker.statusPegawai === "NONAKTIF"
+        worker.statusPegawai === "NONAKTIF" || worker.status === "nonaktif"
       )
       break
     default:
@@ -865,15 +818,12 @@ const applyFilter = () => {
   }
   
   // Format data for table display with new structure
-  tableData.value = filteredWorkers.map((r) => {
+  const formattedData = filteredWorkers.map((r) => {
     const upahPokok = r.upahPokok || r.upah || 0
     const rapel = r.rapel || 0
     
     // Apply multiplier for display (like in the image: 1050 becomes 10.500.000)
     let totalUpah = upahPokok + rapel
-    // if (upahPokok > 100) {
-    //   totalUpah = upahPokok * 10000 // Multiply by 10,000 for larger values
-    // }
     
     return {
       id: r.id,
@@ -884,30 +834,39 @@ const applyFilter = () => {
       upahPokok: upahPokok,
       rapel: rapel,
       totalUpah: totalUpah,
-      statusPegawai: r.statusPegawai,
+      statusPegawai: r.statusPegawai || (r.status === 'nonaktif' ? 'NONAKTIF' : 'AKTIF'),
       isEditing: false
     }
   })
   
+  // Apply pagination
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value
+  const endIndex = startIndex + itemsPerPage.value
+  tableData.value = formattedData.slice(startIndex, endIndex)
+  paginatedData.value = formattedData // Store all filtered data for reference
+  
   // Compute iuran summary first
-  computeIuran(filteredWorkers)
+  computeIuran(formattedData)
 
   // Update summary cards with real data
-  updateSummaryCards(filteredWorkers)
+  updateSummaryCards(formattedData)
 }
 
 // New filter functions
 const onStatusChange = (value) => {
   selectedStatus.value = value
+  currentPage.value = 1 // Reset to first page when status changes
   applyFilter()
 }
 
 const onSearchChange = () => {
+  currentPage.value = 1 // Reset to first page when search changes
   applyFilter()
 }
 
 const onPaginationChange = (value) => {
   itemsPerPage.value = value
+  currentPage.value = 1 // Reset to first page when pagination changes
   applyFilter()
 }
 

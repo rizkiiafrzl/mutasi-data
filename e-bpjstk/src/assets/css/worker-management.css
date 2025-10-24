@@ -138,7 +138,16 @@
 
 /* Tabs */
 .tab-navigation { display: flex; gap: 8px; padding: 0 32px; justify-content: flex-start; }
-.tab-btn { min-width: 120px; height: 40px; font-weight: 600; transition: none; }
+.tab-btn { 
+  min-width: 120px; 
+  height: 40px; 
+  font-weight: 600; 
+  transition: none;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
 
 /* Tables */
 .table-container { padding: 0 32px; }

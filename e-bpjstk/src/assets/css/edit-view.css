@@ -381,10 +381,30 @@
   padding: 12px 24px;
   transition: all 0.3s ease;
   font-size: 0.875rem;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  min-width: 140px; /* Ensure consistent width */
 }
 
 .tab-btn:hover {
   transform: translateY(-1px);
+}
+
+/* Ensure text content is perfectly centered */
+.tab-btn .v-btn__content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+
+/* Override any Vuetify text alignment */
+.tab-btn .v-btn__content span {
+  text-align: center !important;
+  width: 100% !important;
 }
 
 /* Filter and Search Container */
