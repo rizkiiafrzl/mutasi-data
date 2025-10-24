@@ -7,21 +7,14 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      redirect: (to) => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        return isLoggedIn ? '/dashboard' : '/login'
-      },
+      redirect: '/dashboard', // Always redirect to dashboard
     },
     {
       path: '/tenaga/edit/:id',
       name: 'edit-worker',
       component: () => import('../views/EditWorkerView.vue'),
       props: true,
-      beforeEnter: (to, from, next) => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        if (isLoggedIn) next()
-        else next('/login')
-      },
+      // Authentication disabled
     },
     {
       path: '/about',
@@ -51,95 +44,43 @@ const router = createRouter({
       name: 'registration-form',
       component: () => import('../views/RegistrationFormView.vue'),
       props: true,
-      beforeEnter: (to, from, next) => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        if (isLoggedIn) next()
-        else next('/login')
-      },
+      // Authentication disabled
     },
     {
       path: '/tenaga/upload',
       name: 'upload-worker',
       component: () => import('../views/UploadWorkerView.vue'),
-      beforeEnter: (to, from, next) => {
-        // Check if user is logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        if (isLoggedIn) {
-          next()
-        } else {
-          next('/login')
-        }
-      },
+      // Authentication disabled
     },
     {
       path: '/tenaga/upload-na',
       name: 'upload-tk-na',
       component: () => import('../views/UploadTKNAView.vue'),
-      beforeEnter: (to, from, next) => {
-        // Check if user is logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        if (isLoggedIn) {
-          next()
-        } else {
-          next('/login')
-        }
-      },
+      // Authentication disabled
     },
     {
       path: '/tenaga/upload-upah',
       name: 'upload-upah',
       component: () => import('../views/UploadUpahView.vue'),
-      beforeEnter: (to, from, next) => {
-        // Check if user is logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        if (isLoggedIn) {
-          next()
-        } else {
-          next('/login')
-        }
-      },
+      // Authentication disabled
     },
     {
       path: '/tenaga/koreksi-data',
       name: 'koreksi-data',
       component: () => import('../views/KoreksiDataView.vue'),
-      beforeEnter: (to, from, next) => {
-        // Check if user is logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        if (isLoggedIn) {
-          next()
-        } else {
-          next('/login')
-        }
-      },
+      // Authentication disabled
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/DashboardView.vue'),
-      beforeEnter: (to, from, next) => {
-        // Check if user is logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        if (isLoggedIn) {
-          next()
-        } else {
-          next('/login')
-        }
-      },
+      // Authentication disabled
     },
     {
       path: '/edit/:data',
       name: 'edit',
       component: () => import('../views/EditView.vue'),
-      beforeEnter: (to, from, next) => {
-        // Check if user is logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-        if (isLoggedIn) {
-          next()
-        } else {
-          next('/login')
-        }
-      },
+      // Authentication disabled
     },
   ],
 })
