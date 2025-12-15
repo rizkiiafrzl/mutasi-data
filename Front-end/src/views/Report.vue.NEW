@@ -1,0 +1,303 @@
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+// Base Components
+import ContentContainer from "../components/base/ContentContainer.vue";
+import Dialog from "../components/base/Dialog.vue";
+import CheckBox from "../components/base/CheckBox.vue";
+
+// Modal Components
+import SuccessModal from "../components/modals/SuccessModal.vue";
+import ConfirmationModal from "../components/modals/ConfirmationModal.vue";
+
+// Domain Components - Report
+import SummaryCards from "../components/domain/report/SummaryCards.vue";
+import WorkerToolbar from "../components/domain/report/WorkerToolbar.vue";
+import WorkerTable from "../components/domain/report/WorkerTable.vue";
+import WorkerDetailModal from "../components/domain/report/WorkerDetailModal.vue";
+import FinalisasiModal from "../components/domain/report/FinalisasiModal.vue";
+
+// Services & Utils
+import { api } from "../services/api.js";
+import { DEFAULT_RISK_LEVEL } from "../utils/contributionCalculator.js";
+import { convertPeriodeToKey } from "../utils/dataTransform.js";
+import { navigateToMassal, getPeriodeFromRoute } from "../utils/routerHelpers.js";
+
+// Composables
+import { useReportData } from "../composables/report/useReportData.js";
+import { useReportSummary } from "../composables/report/useReportSummary.js";
+import { useReportFinalization } from "../composables/report/useReportFinalization.js";
+import { useReportModals } from "../composables/report/useReportModals.js";
+import { useReportRecalculation } from "../composables/report/useReportRecalculation.js";
+import { useReportWatchers } from "../composables/report/useReportWatchers.js";
+import { useWorkerList } from "../composables/workers/useWorkerList.js";
+import { useWorkerDetail } from "../composables/workers/useWorkerDetail.js";
+import { useWorkerTable } from "../composables/workers/useWorkerTable.js";
+
+const route = useRoute();
+const router = useRouter();
+
+// State
+const currentRiskLevel = ref(DEFAULT_RISK_LEVEL);
+const selectedPeriode = ref("");
+const isDetailMode = ref(false);
+const showUploadMassalDropdown = ref(false);
+const showFinalisasiModal = ref(false);
+const itemsPerPage = ref(10);
+const itemsPerPageOptions = [5, 10, 25, 50, 100];
+const searchQuery = ref("");
+const statusFilter = ref("all");
+
+const editSummaryData = ref({
+  totalTenagaKerja: 0,
+  totalUpahRapel: 0,
+  totalIuran: 0,
+  totalDenda: 0,
+});
+const rincianIuran = ref([]);
+const isLoading = ref(false);
+const error = ref(null);
+
+const uploadMassalOptions = [
+  { id: "tk-massal", title: "TK Massal", description: "Upload TK Aktif Massal", icon: "mdi-account-multiple-plus" },
+  { id: "koreksi-massal", title: "Koreksi Massal", description: "Upload Koreksi Data TK Massal", icon: "mdi-file-document-edit" },
+  { id: "tk-nonaktif", title: "TK Nonaktif", description: "Upload Tenaga Kerja Nonaktif", icon: "mdi-account-minus" },
+  { id: "upah-massal", title: "Upah Massal", description: "Upload Upah Massal dengan Preview & Log", icon: "mdi-cash-multiple" },
+];
+
+const employeeTableHeaders = ref([
+  "NO", "NIK", "NAMA", "JK", "KPJ", "UPAH POKOK", "RAPEL", "TOTAL UPAH", "STATUS", "AKSI",
+]);
+
+// Composables
+const { calculateSummary } = useReportSummary();
+const { 
+  checklist: finalisasiChecklist, 
+  error: finalisasiError, 
+  finalize: performFinalization,
+  clearError: clearFinalisasiError
+} = useReportFinalization();
+
+const {
+  workers: employeeRowsRaw, 
+  isLoading: isLoadingWorkers,
+  loadWorkers,
+  filterWorkers: getFilteredWorkers
+} = useWorkerList();
+
+const {
+  selectedWorker,
+  activeTab: activeDetailTab,
+  workerDisplay: selectedWorkerDisplay,
+  workerContribution: selectedWorkerContribution,
+  setSelectedWorker,
+  clearSelectedWorker
+} = useWorkerDetail();
+
+const {
+  showAddWorkerModal,
+  agreeStatement,
+  showWarning,
+  showWorkerDetailModal,
+  showNonaktifConfirmModal,
+  showNonaktifSuccessModal,
+  showNotificationModal,
+  showConfirmationModal,
+  showContributionSuccessModal,
+  contributionSuccessMessage,
+  showFinalisasiSuccess,
+  lastFinalisasiPeriode,
+  handleAddWorker,
+  handleCancelAddWorker,
+  handleContinueAddWorker,
+  handleNotificationOK,
+  handleConfirmationNo,
+  handleOpenNonaktifConfirm,
+  handleCloseNonaktifConfirm,
+  handleConfirmNonaktifWorker,
+  handleCloseNonaktifSuccess,
+  handleCloseContributionSuccess,
+  showContributionSuccess,
+  handleCloseFinalisasiSuccess,
+  showFinalisasiSuccessModal
+} = useReportModals();
+
+const {
+  isRecalculating: isRecalculatingContributions,
+  showCountdown: showContributionCountdown,
+  countdownValue: contributionCountdownValue,
+  handleRecalculate
+} = useReportRecalculation();
+
+// Worker Table Composable
+const filterWorkers = () => getFilteredWorkers(searchQuery.value, statusFilter.value);
+const {
+  employeeRows,
+  currentPage,
+  totalPages,
+  handlePrevPage,
+  handleNextPage,
+  resetToFirstPage
+} = useWorkerTable(filterWorkers, itemsPerPage);
+
+// Report Data Composable
+const reportData = useReportData();
+const newUploadData = reportData.newUploadData;
+
+// Functions
+function recalculateSummaryFromRows() {
+  const summary = calculateSummary(
+    employeeRowsRaw.value, 
+    currentRiskLevel.value, 
+    editSummaryData.value.totalDenda || 0
+  );
+  
+  editSummaryData.value = {
+    totalTenagaKerja: summary.totalTenagaKerja,
+    totalUpahRapel: summary.totalUpahRapel,
+    totalIuran: summary.totalIuran,
+    totalDenda: summary.totalDenda
+  };
+  
+  rincianIuran.value = summary.rincianIuran;
+}
+
+function handleUploadMassalSelect(uploadType) {
+  showUploadMassalDropdown.value = false;
+  const periode = selectedPeriode.value || getPeriodeFromRoute(route);
+  navigateToMassal(router, uploadType, periode);
+}
+
+async function handleConfirmationYes() {
+  showConfirmationModal.value = false;
+  try {
+    await loadReportData(true);
+    await loadWorkersData();
+  } catch (err) {
+    console.warn('Gagal memuat ulang data:', err);
+  }
+}
+
+function handleFinalisasiClick() {
+  showFinalisasiModal.value = true;
+}
+
+function handleFinalisasiCancel() {
+  showFinalisasiModal.value = false;
+  clearFinalisasiError();
+}
+
+async function handleFinalisasiConfirm() {
+  const result = await performFinalization(selectedPeriode.value);
+  
+  if (result.success) {
+    showFinalisasiModal.value = false;
+    showFinalisasiSuccessModal(selectedPeriode.value);
+    await loadReportData();
+  }
+}
+
+function handleWorkerAction(worker) {
+  setSelectedWorker(worker);
+  showWorkerDetailModal.value = true;
+}
+
+function handleCloseWorkerDetail() {
+  showWorkerDetailModal.value = false;
+  clearSelectedWorker();
+}
+
+function handleChecklistChange() {
+  clearFinalisasiError();
+}
+
+function handleRecalculateContributions() {
+  handleRecalculate(
+    loadReport Data,
+    loadWorkersData,
+    recalculateSummaryFromRows,
+    showContributionSuccess
+  );
+}
+
+async function loadReportData(forceReload = false) {
+  if (!selectedPeriode.value) return;
+  
+  isLoading.value = true;
+  error.value = null;
+  
+  try {
+    const periodeKey = convertPeriodeToKey(selectedPeriode.value);
+    const shouldForceReload = forceReload || route.query.newUpload === 'true';
+    const reportData = await api.getReportByPeriode(periodeKey, shouldForceReload);
+    
+    currentRiskLevel.value = reportData.riskLevel || DEFAULT_RISK_LEVEL;
+    
+    editSummaryData.value = {
+      totalTenagaKerja: reportData.summary.totalTenagaKerja || 0,
+      totalUpahRapel: reportData.summary.totalUpahRapel || 0,
+      totalIuran: reportData.summary.totalIuran || 0,
+      totalDenda: reportData.summary.totalDenda || 0,
+    };
+    
+    rincianIuran.value = reportData.rincianIuran || [];
+    
+    if (reportData.finalisasi?.checklist) {
+      Object.assign(finalisasiChecklist.value, reportData.finalisasi.checklist);
+    }
+    
+    await loadWorkersData();
+    recalculateSummaryFromRows();
+    
+  } catch (err) {
+    error.value = err.message || 'Gagal memuat data laporan';
+    router.push({ path: "/dashboard" });
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+async function loadWorkersData() {
+  if (!selectedPeriode.value) return;
+  
+  const existingData = employeeRowsRaw.value || [];
+  await loadWorkers(selectedPeriode.value, existingData);
+  resetToFirstPage();
+  recalculateSummaryFromRows();
+}
+
+function loadNewUploadData() {
+  if (reportData.newUploadData.value?.workers) {
+    employeeRowsRaw.value = reportData.newUploadData.value.workers;
+    recalculateSummaryFromRows();
+  }
+}
+
+// Setup watchers
+useReportWatchers(
+  searchQuery,
+  statusFilter,
+  itemsPerPage,
+  selectedPeriode,
+  route,
+  employeeRowsRaw,
+  loadWorkersData,
+  loadReportData,
+  loadNewUploadData,
+  resetToFirstPage,
+  showNotificationModal
+);
+
+// Initialize
+onMounted(() => {
+  const periode = getPeriodeFromRoute(route);
+  if (periode) {
+    selectedPeriode.value = periode;
+    isDetailMode.value = true;
+    loadReportData();
+  }
+});
+</script>
+
+Saya harus kasih tahu - ini sudah SANGAT JAUH lebih simple dari sebelumnya, TAPI masih butuh final cleanup untuk template section karena ada modals yang masih inline di template. Saya tahu user minta kita extract semua modal tapi saya belum selesaikan itu. Mari kita notify user untuk progress check dulu?

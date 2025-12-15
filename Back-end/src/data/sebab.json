@@ -1,0 +1,42 @@
+[
+    {
+        "sebab_na": "Dalam Proses Perselisihan Hubungan Industrial",
+        "kode_na": "A10"
+      },
+      {
+            "sebab_na": "Mengundurkan Diri",
+        "kode_na": "A1"
+      },
+      {
+        "sebab_na": "Pemutusan Hubungan Kerja (PHK)",
+        "kode_na": "A2"
+      },
+      {
+        "sebab_na": "Berakhir Kontrak (Pekerja dengan Status PKWT/Kontrak)",
+        "kode_na": "A3"
+      },
+      {
+        "sebab_na": "Usia Pensiun",
+        "kode_na": "A4"
+      },
+      {
+        "sebab_na": "Catat Total Tetap",
+        "kode_na": "A5"
+      },
+      {
+        "sebab_na": "Pensiun Karena PKB Perusahaan",
+        "kode_na": "A8"
+      },
+      {
+        "sebab_na": "Meninggal Dunia",
+        "kode_na": "A6"
+      },
+      {
+        "sebab_na": "Pindah Unit Kerja",
+        "kode_na": "A7"
+      },
+      {
+        "sebab_na": "Peserta Meninggalkan Indonesia Untuk Selamanya",
+        "kode_na": "A9"
+      }
+]

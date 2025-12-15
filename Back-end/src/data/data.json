@@ -1,0 +1,643 @@
+{
+  "currentPeriod": "2025-11",
+  "dashboard": {
+    "summary": {
+      "kodeTagihan": "424101780000",
+      "totalIuranDanDenda": 15000000,
+      "sisaPembayaran": 0,
+      "totalTagihan": 15000000
+    },
+    "history": {
+      "data": [
+        {
+          "periode": "2025-11",
+          "periodeDisplay": "11/2025",
+          "jumlahTk": 150,
+          "nominalIuran": 15000000,
+          "nominalDenda": 0,
+          "status": "DRAFT",
+          "actions": [
+            "EDIT",
+            "CETAK",
+            "HAPUS"
+          ],
+          "isEditable": true,
+          "isCurrentPeriod": false,
+          "canFinalize": true
+        },
+        {
+          "periode": "2025-10",
+          "periodeDisplay": "10/2025",
+          "jumlahTk": 145,
+          "nominalIuran": 14500000,
+          "nominalDenda": 500000,
+          "status": "FINAL",
+          "actions": [
+            "CETAK"
+          ],
+          "isEditable": false,
+          "tanggalFinalisasi": "2025-10-29",
+          "canFinalize": false
+        },
+        {
+          "periode": "2025-09",
+          "periodeDisplay": "09/2025",
+          "jumlahTk": 140,
+          "nominalIuran": 14000000,
+          "nominalDenda": 0,
+          "status": "APPROVAL",
+          "actions": [
+            "CETAK"
+          ],
+          "isEditable": false,
+          "canFinalize": false
+        },
+        {
+          "periode": "2025-08",
+          "periodeDisplay": "08/2025",
+          "jumlahTk": 140,
+          "nominalIuran": 14000000,
+          "nominalDenda": 2000000,
+          "status": "POSTING",
+          "actions": [
+            "CETAK"
+          ],
+          "isEditable": false,
+          "canFinalize": false
+        }
+      ],
+      "pagination": {
+        "page": 1,
+        "per_page": 10,
+        "total": 4,
+        "totalPages": 1
+      }
+    }
+  },
+  "reports": {
+    "2025-11": {
+      "periode": "2025-11",
+      "periodeDisplay": "11/2025",
+      "summary": {
+        "totalTenagaKerja": 10,
+        "totalUpahRapel": 20000000,
+        "totalIuran": 800000,
+        "totalDenda": 0
+      },
+      "riskLevel": "Rendah",
+      "useTotalUpahForContribution": false,
+      "rincianIuran": [
+        {
+          "program": "JKK",
+          "label": "IURAN JKK",
+          "amount": 16300,
+          "color": "blue"
+        },
+        {
+          "program": "JKM",
+          "label": "IURAN JKM",
+          "amount": 4890,
+          "color": "pink"
+        },
+        {
+          "program": "JHT",
+          "label": "IURAN JHT",
+          "amount": 326000,
+          "color": "orange"
+        },
+        {
+          "program": "JP",
+          "label": "IURAN JP",
+          "amount": 163000,
+          "color": "purple"
+        }
+      ],
+      "workers": {
+        "data": [
+          {
+            "no": 1,
+            "nik": "3201234567890123",
+            "nama": "Ahmad Wijaya",
+            "jk": "Laki-laki",
+            "kpj": "1234567890",
+            "upahPokok": 5000000,
+            "rapel": 500000,
+            "totalUpah": 5500000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 2,
+            "nik": "3201234567890124",
+            "nama": "Siti Nurhaliza",
+            "jk": "Perempuan",
+            "kpj": "1234567891",
+            "upahPokok": 4500000,
+            "rapel": 300000,
+            "totalUpah": 4800000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 3,
+            "nik": "3201234567890125",
+            "nama": "John Smith",
+            "jk": "Laki-laki",
+            "kpj": "-",
+            "upahPokok": 6000000,
+            "rapel": 0,
+            "totalUpah": 6000000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 4,
+            "nik": "3201234567890126",
+            "nama": "Dewi Lestari",
+            "jk": "Perempuan",
+            "kpj": "1234567893",
+            "upahPokok": 5500000,
+            "rapel": 200000,
+            "totalUpah": 5700000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 5,
+            "nik": "3201234567890127",
+            "nama": "Budi Santoso",
+            "jk": "Laki-laki",
+            "kpj": "1234567894",
+            "upahPokok": 4900000,
+            "rapel": 150000,
+            "totalUpah": 5050000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 6,
+            "nik": "3201234567890128",
+            "nama": "Maria Fransiska",
+            "jk": "Perempuan",
+            "kpj": "1234567895",
+            "upahPokok": 5200000,
+            "rapel": 100000,
+            "totalUpah": 5300000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 7,
+            "nik": "3201234567890129",
+            "nama": "Agus Setiawan",
+            "jk": "Laki-laki",
+            "kpj": "1234567896",
+            "upahPokok": 5800000,
+            "rapel": 250000,
+            "totalUpah": 6050000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 8,
+            "nik": "3201234567890130",
+            "nama": "Rina Marlina",
+            "jk": "Perempuan",
+            "kpj": "1234567897",
+            "upahPokok": 4700000,
+            "rapel": 200000,
+            "totalUpah": 4900000,
+            "status": "NONAKTIF"
+          },
+          {
+            "no": 9,
+            "nik": "3201234567890131",
+            "nama": "Andi Wijaya",
+            "jk": "Laki-laki",
+            "kpj": "1234567898",
+            "upahPokok": 5100000,
+            "rapel": 400000,
+            "totalUpah": 5500000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 10,
+            "nik": "3201234567890132",
+            "nama": "Lina Marlina",
+            "jk": "Perempuan",
+            "kpj": "1234567899",
+            "upahPokok": 5300000,
+            "rapel": 250000,
+            "totalUpah": 5550000,
+            "status": "AKTIF"
+          }
+        ],
+        "pagination": {
+          "page": 1,
+          "per_page": 10,
+          "total": 10,
+          "totalPages": 1
+        }
+      },
+      "finalisasi": {
+        "checklist": {
+          "dataTkLengkap": false,
+          "dataUpahBenar": false,
+          "perhitunganIuran": false,
+          "totalIuranDiverifikasi": false,
+          "tidakAdaPerubahan": false
+        },
+        "status": "DRAFT",
+        "postUrl": "/reports/2025-11/finalisasi"
+      }
+    },
+    "2025-10": {
+      "periode": "2025-10",
+      "periodeDisplay": "10/2025",
+      "summary": {
+        "totalTenagaKerja": 10,
+        "totalUpahRapel": 16300000,
+        "totalIuran": 673190,
+        "totalDenda": 1113290
+      },
+      "riskLevel": "Rendah",
+      "useTotalUpahForContribution": false,
+      "rincianIuran": [
+        {
+          "program": "JKK",
+          "label": "IURAN JKK",
+          "amount": 16300,
+          "color": "blue"
+        },
+        {
+          "program": "JKM",
+          "label": "IURAN JKM",
+          "amount": 4890,
+          "color": "pink"
+        },
+        {
+          "program": "JHT",
+          "label": "IURAN JHT",
+          "amount": 326000,
+          "color": "orange"
+        },
+        {
+          "program": "JP",
+          "label": "IURAN JP",
+          "amount": 163000,
+          "color": "purple"
+        }
+      ],
+      "workers": {
+        "data": [
+          {
+            "no": 1,
+            "nik": "3201234567890123",
+            "nama": "Ahmad Wijaya",
+            "jk": "Laki-laki",
+            "kpj": "1234567890",
+            "upahPokok": 5000000,
+            "rapel": 500000,
+            "totalUpah": 5500000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 2,
+            "nik": "3201234567890124",
+            "nama": "Siti Nurhaliza",
+            "jk": "Perempuan",
+            "kpj": "1234567891",
+            "upahPokok": 4500000,
+            "rapel": 300000,
+            "totalUpah": 4800000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 3,
+            "nik": "3201234567890125",
+            "nama": "John Smith",
+            "jk": "Laki-laki",
+            "kpj": "-",
+            "upahPokok": 6000000,
+            "rapel": 0,
+            "totalUpah": 6000000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 4,
+            "nik": "3201234567890126",
+            "nama": "Dewi Lestari",
+            "jk": "Perempuan",
+            "kpj": "1234567893",
+            "upahPokok": 5500000,
+            "rapel": 200000,
+            "totalUpah": 5700000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 5,
+            "nik": "3201234567890127",
+            "nama": "Budi Santoso",
+            "jk": "Laki-laki",
+            "kpj": "1234567894",
+            "upahPokok": 4900000,
+            "rapel": 150000,
+            "totalUpah": 5050000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 6,
+            "nik": "3201234567890128",
+            "nama": "Maria Fransiska",
+            "jk": "Perempuan",
+            "kpj": "1234567895",
+            "upahPokok": 5200000,
+            "rapel": 100000,
+            "totalUpah": 5300000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 7,
+            "nik": "3201234567890129",
+            "nama": "Agus Setiawan",
+            "jk": "Laki-laki",
+            "kpj": "1234567896",
+            "upahPokok": 5800000,
+            "rapel": 250000,
+            "totalUpah": 6050000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 8,
+            "nik": "3201234567890130",
+            "nama": "Rina Marlina",
+            "jk": "Perempuan",
+            "kpj": "1234567897",
+            "upahPokok": 4700000,
+            "rapel": 200000,
+            "totalUpah": 4900000,
+            "status": "NONAKTIF"
+          },
+          {
+            "no": 9,
+            "nik": "3201234567890131",
+            "nama": "Andi Wijaya",
+            "jk": "Laki-laki",
+            "kpj": "1234567898",
+            "upahPokok": 5100000,
+            "rapel": 400000,
+            "totalUpah": 5500000,
+            "status": "AKTIF"
+          },
+          {
+            "no": 10,
+            "nik": "3201234567890132",
+            "nama": "Lina Marlina",
+            "jk": "Perempuan",
+            "kpj": "1234567899",
+            "upahPokok": 5300000,
+            "rapel": 250000,
+            "totalUpah": 5550000,
+            "status": "AKTIF"
+          }
+        ],
+        "pagination": {
+          "page": 1,
+          "per_page": 10,
+          "total": 10,
+          "totalPages": 1
+        }
+      },
+      "finalisasi": {
+        "checklist": {
+          "dataTkLengkap": true,
+          "dataUpahBenar": true,
+          "perhitunganIuran": true,
+          "totalIuranDiverifikasi": true,
+          "tidakAdaPerubahan": true
+        },
+        "status": "FINAL",
+        "tanggalFinalisasi": "2025-10-29"
+      }
+    }
+  },
+  "workers": {
+    "options": {
+      "statusPegawai": [
+        "PKWT",
+        "PKWTT",
+        "MAGANG"
+      ],
+      "golDarah": [
+        "A",
+        "B",
+        "AB",
+        "O"
+      ],
+      "jenisKelamin": [
+        "LAKI-LAKI",
+        "PEREMPUAN"
+      ],
+      "statusKawin": [
+        "BELUM KAWIN",
+        "KAWIN",
+        "CERAI"
+      ]
+    },
+    "data": [
+      {
+        "id": 1,
+        "namaLengkap": "Ahmad Wijaya",
+        "nik": "3201234567890123",
+        "tanggalLahir": "1999-10-12",
+        "status": "AKTIF",
+        "kpj": "1234567890",
+        "kategori": "Aktif"
+      },
+      {
+        "id": 2,
+        "namaLengkap": "Siti Nurhaliza",
+        "nik": "3201234567890124",
+        "tanggalLahir": "2000-02-20",
+        "status": "AKTIF",
+        "kpj": "1234567891",
+        "kategori": "Aktif"
+      },
+      {
+        "id": 3,
+        "namaLengkap": "John Smith",
+        "nik": "-",
+        "tanggalLahir": "1998-03-15",
+        "status": "AKTIF",
+        "kpj": "-",
+        "kategori": "Baru"
+      },
+      {
+        "id": 4,
+        "namaLengkap": "Dewi Lestari",
+        "nik": "3201234567890126",
+        "tanggalLahir": "1997-08-10",
+        "status": "AKTIF",
+        "kpj": "1234567893",
+        "kategori": "Aktif"
+      },
+      {
+        "id": 5,
+        "namaLengkap": "Budi Santoso",
+        "nik": "3201234567890127",
+        "tanggalLahir": "1996-11-01",
+        "status": "AKTIF",
+        "kpj": "1234567894",
+        "kategori": "Aktif"
+      },
+      {
+        "id": 6,
+        "namaLengkap": "Maria Fransiska",
+        "nik": "3201234567890128",
+        "tanggalLahir": "1995-05-14",
+        "status": "AKTIF",
+        "kpj": "1234567895",
+        "kategori": "Aktif"
+      },
+      {
+        "id": 7,
+        "namaLengkap": "Agus Setiawan",
+        "nik": "3201234567890129",
+        "tanggalLahir": "1994-08-25",
+        "status": "AKTIF",
+        "kpj": "1234567896",
+        "kategori": "Aktif"
+      },
+      {
+        "id": 8,
+        "namaLengkap": "Rina Marlina",
+        "nik": "3201234567890130",
+        "tanggalLahir": "1995-05-22",
+        "status": "NONAKTIF",
+        "kpj": "1234567897",
+        "kategori": "Nonaktif"
+      },
+      {
+        "id": 9,
+        "namaLengkap": "Andi Wijaya",
+        "nik": "3201234567890131",
+        "tanggalLahir": "1993-09-19",
+        "status": "AKTIF",
+        "kpj": "1234567898",
+        "kategori": "Aktif"
+      },
+      {
+        "id": 10,
+        "namaLengkap": "Lina Marlina",
+        "nik": "3201234567890132",
+        "tanggalLahir": "1992-07-10",
+        "status": "AKTIF",
+        "kpj": "1234567899",
+        "kategori": "Aktif"
+      }
+    ]
+  },
+  "uploads": {
+    "options": [
+      {
+        "id": "TK-MASSAL",
+        "title": "TK Massal",
+        "subtitle": "Upload TK Aktif Massal",
+        "instructions": [
+          "Gunakan template Excel resmi",
+          "Pastikan format kolom sesuai"
+        ],
+        "showHistory": true
+      },
+      {
+        "id": "KOREKSI-MASSAL",
+        "title": "Koreksi Massal",
+        "subtitle": "Upload Koreksi Data TK Massal",
+        "instructions": [
+          "Gunakan template koreksi",
+          "Periksa kolom wajib"
+        ],
+        "showHistory": true
+      },
+      {
+        "id": "TK-NONAKTIF",
+        "title": "TK Nonaktif",
+        "subtitle": "Upload Tenaga Kerja Nonaktif",
+        "instructions": [
+          "Cantumkan alasan nonaktif",
+          "Pastikan tanggal valid"
+        ],
+        "showHistory": false
+      },
+      {
+        "id": "UPAH-MASSAL",
+        "title": "Upah Massal",
+        "subtitle": "Upload Upah Massal dengan Preview & Log",
+        "instructions": [
+          "Gunakan template upah",
+          "Pastikan nominal rupiah benar"
+        ],
+        "showHistory": true
+      }
+    ],
+    "history": {
+      "data": [
+        {
+          "totalValid": 25,
+          "totalInvalid": 5,
+          "totalData": 30,
+          "statusValidasi": "SELESAI",
+          "tanggalSelesai": "2024-11-01",
+          "sumberData": "Excel",
+          "jenis": "TK-MASSAL",
+          "action": [
+            "LIHAT",
+            "HAPUS"
+          ]
+        },
+        {
+          "totalValid": 50,
+          "totalInvalid": 0,
+          "totalData": 50,
+          "statusValidasi": "SELESAI",
+          "tanggalSelesai": "2024-10-25",
+          "sumberData": "Excel",
+          "jenis": "UPAH-MASSAL",
+          "action": [
+            "LIHAT"
+          ]
+        }
+      ],
+      "pagination": {
+        "page": 1,
+        "per_page": 10,
+        "total": 2,
+        "totalPages": 1
+      }
+    }
+  },
+  "dialogs": {
+    "notification": {
+      "title": "Pemberitahuan",
+      "message": "Harap cek kembali! Jika pekerja belum berhenti bekerja/PHK, pastikan pekerja tersebut masih mendapatkan perlindungan jamsostek."
+    },
+    "confirmation": {
+      "title": "Konfirmasi",
+      "message": "Apakah PK/BU ada perubahan data?",
+      "options": [
+        "Ya",
+        "Tidak"
+      ]
+    },
+    "finalisasiSuccess": {
+      "title": "Berhasil",
+      "message": "Finalisasi berhasil dilakukan!"
+    }
+  },
+  "enums": {
+    "status": [
+      "DRAFT",
+      "FINAL",
+      "APPROVAL"
+    ],
+    "jenisUpload": [
+      "TK-MASSAL",
+      "UPAH-MASSAL",
+      "KOREKSI-MASSAL",
+      "TK-NONAKTIF"
+    ]
+  }
+}

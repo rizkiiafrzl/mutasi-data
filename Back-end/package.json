@@ -1,0 +1,23 @@
+{
+    "name": "backend-service",
+    "version": "1.0.0",
+    "description": "Backend service for TK management system",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "node --watch index.js"
+    },
+    "keywords": [
+        "backend",
+        "api",
+        "tk-management"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.19.2",
+        "xlsx": "^0.18.5"
+    }
+}

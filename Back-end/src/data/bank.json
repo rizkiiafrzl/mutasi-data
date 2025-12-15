@@ -1,0 +1,530 @@
+[
+  {
+    "nama_bank": "ALLO BANK",
+    "kode_bank": "567"
+  },
+  {
+    "nama_bank": "AMERICAN EXPRESS BANK LTD",
+    "kode_bank": "030"
+  },
+  {
+    "nama_bank": "ANZ INDONESIA",
+    "kode_bank": "061"
+  },
+  {
+    "nama_bank": "BANGKOK BANK PUBLIC, CO. LTD.",
+    "kode_bank": "040"
+  },
+  {
+    "nama_bank": "BANK ACEH",
+    "kode_bank": "116"
+  },
+  {
+    "nama_bank": "BANK ALADIN SYARIAH",
+    "kode_bank": "947"
+  },
+  {
+    "nama_bank": "BANK AMAR INDONESIA",
+    "kode_bank": "531"
+  },
+  {
+    "nama_bank": "BANK ARTHA GRAHA INTERNASIONAL",
+    "kode_bank": "037"
+  },
+  {
+    "nama_bank": "BANK BANTEN",
+    "kode_bank": "137"
+  },
+  {
+    "nama_bank": "BANK BCA",
+    "kode_bank": "014"
+  },
+  {
+    "nama_bank": "BANK BENGKULU",
+    "kode_bank": "133"
+  },
+  {
+    "nama_bank": "BANK BJB",
+    "kode_bank": "110"
+  },
+  {
+    "nama_bank": "BANK BJB SYARIAH",
+    "kode_bank": "425"
+  },
+  {
+    "nama_bank": "BANK BNI",
+    "kode_bank": "009"
+  },
+  {
+    "nama_bank": "BANK BPD BALI",
+    "kode_bank": "129"
+  },
+  {
+    "nama_bank": "BANK BPD DIY",
+    "kode_bank": "112"
+  },
+  {
+    "nama_bank": "BANK BPD DIY UNIT SYARIAH",
+    "kode_bank": "112"
+  },
+  {
+    "nama_bank": "BANK BRI",
+    "kode_bank": "002"
+  },
+  {
+    "nama_bank": "BANK BUMI ARTA",
+    "kode_bank": "076"
+  },
+  {
+    "nama_bank": "BANK CAPITAL INDONESIA",
+    "kode_bank": "054"
+  },
+  {
+    "nama_bank": "BANK DANAMON",
+    "kode_bank": "011"
+  },
+  {
+    "nama_bank": "BANK DANAMON UNIT SYARIAH",
+    "kode_bank": "011"
+  },
+  {
+    "nama_bank": "BANK DIGITAL BCA",
+    "kode_bank": "501"
+  },
+  {
+    "nama_bank": "BANK DKI JAKARTA",
+    "kode_bank": "111"
+  },
+  {
+    "nama_bank": "BANK DKI JAKARTA UNIT SYARIAH",
+    "kode_bank": "111"
+  },
+  {
+    "nama_bank": "BANK DKI UNIT SYARIAH",
+    "kode_bank": "111"
+  },
+  {
+    "nama_bank": "BANK EKSPOR INDONESIA",
+    "kode_bank": "003"
+  },
+  {
+    "nama_bank": "BANK FAMA INTERNATIONAL",
+    "kode_bank": "562"
+  },
+  {
+    "nama_bank": "BANK GANESHA",
+    "kode_bank": "161"
+  },
+  {
+    "nama_bank": "BANK IBK INDONESIA",
+    "kode_bank": "945"
+  },
+  {
+    "nama_bank": "BANK ICBC",
+    "kode_bank": "164"
+  },
+  {
+    "nama_bank": "BANK INA PERDANA",
+    "kode_bank": "513"
+  },
+  {
+    "nama_bank": "BANK INDEX SELINDO",
+    "kode_bank": "555"
+  },
+  {
+    "nama_bank": "BANK JAGO",
+    "kode_bank": "542"
+  },
+  {
+    "nama_bank": "BANK JAGO SYARIAH",
+    "kode_bank": "542"
+  },
+  {
+    "nama_bank": "BANK JAMBI",
+    "kode_bank": "115"
+  },
+  {
+    "nama_bank": "BANK JAMBI UNIT SYARIAH",
+    "kode_bank": "115"
+  },
+  {
+    "nama_bank": "BANK JASA JAKARTA",
+    "kode_bank": "472"
+  },
+  {
+    "nama_bank": "BANK JATENG",
+    "kode_bank": "113"
+  },
+  {
+    "nama_bank": "BANK JATENG UNIT SYARIAH",
+    "kode_bank": "113"
+  },
+  {
+    "nama_bank": "BANK JATIM",
+    "kode_bank": "114"
+  },
+  {
+    "nama_bank": "BANK JATIM UNIT SYARIAH",
+    "kode_bank": "114"
+  },
+  {
+    "nama_bank": "BANK KALBAR",
+    "kode_bank": "123"
+  },
+  {
+    "nama_bank": "BANK KALBAR UNIT SYARIAH",
+    "kode_bank": "123"
+  },
+  {
+    "nama_bank": "BANK KALSEL",
+    "kode_bank": "122"
+  },
+  {
+    "nama_bank": "BANK KALSEL UNIT SYARIAH",
+    "kode_bank": "122"
+  },
+  {
+    "nama_bank": "BANK KALTENG",
+    "kode_bank": "125"
+  },
+  {
+    "nama_bank": "BANK KALTIMTARA",
+    "kode_bank": "124"
+  },
+  {
+    "nama_bank": "BANK KALTIMTARA UNIT SYARIAH",
+    "kode_bank": "124"
+  },
+  {
+    "nama_bank": "BANK KB BUKOPIN",
+    "kode_bank": "441"
+  },
+  {
+    "nama_bank": "BANK LAMPUNG",
+    "kode_bank": "121"
+  },
+  {
+    "nama_bank": "BANK LUAR NEGERI",
+    "kode_bank": "000"
+  },
+  {
+    "nama_bank": "BANK MALUKU",
+    "kode_bank": "131"
+  },
+  {
+    "nama_bank": "BANK MANDIRI",
+    "kode_bank": "008"
+  },
+  {
+    "nama_bank": "BANK MANDIRI TASPEN",
+    "kode_bank": "564"
+  },
+  {
+    "nama_bank": "BANK MASPION",
+    "kode_bank": "157"
+  },
+  {
+    "nama_bank": "BANK MAYAPADA",
+    "kode_bank": "097"
+  },
+  {
+    "nama_bank": "BANK MAYORA",
+    "kode_bank": "553"
+  },
+  {
+    "nama_bank": "BANK MEGA",
+    "kode_bank": "426"
+  },
+  {
+    "nama_bank": "BANK MEGA SYARIAH",
+    "kode_bank": "506"
+  },
+  {
+    "nama_bank": "BANK MESTIKA",
+    "kode_bank": "151"
+  },
+  {
+    "nama_bank": "BANK MIZUHO INDONESIA",
+    "kode_bank": "048"
+  },
+  {
+    "nama_bank": "BANK MNC INTERNASIONAL",
+    "kode_bank": "485"
+  },
+  {
+    "nama_bank": "BANK MUAMALAT",
+    "kode_bank": "147"
+  },
+  {
+    "nama_bank": "BANK MULTIARTA SENTOSA",
+    "kode_bank": "548"
+  },
+  {
+    "nama_bank": "BANK NEO COMMERCE",
+    "kode_bank": "490"
+  },
+  {
+    "nama_bank": "BANK NTB SYARIAH",
+    "kode_bank": "128"
+  },
+  {
+    "nama_bank": "BANK NTT",
+    "kode_bank": "130"
+  },
+  {
+    "nama_bank": "BANK OF AMERICA",
+    "kode_bank": "033"
+  },
+  {
+    "nama_bank": "BANK OF CHINA (HONG KONG) LIMITED",
+    "kode_bank": "069"
+  },
+  {
+    "nama_bank": "BANK OF INDIA INDONESIA",
+    "kode_bank": "146"
+  },
+  {
+    "nama_bank": "BANK PANIN",
+    "kode_bank": "019"
+  },
+  {
+    "nama_bank": "BANK PAPUA",
+    "kode_bank": "132"
+  },
+  {
+    "nama_bank": "BANK PERMATA",
+    "kode_bank": "013"
+  },
+  {
+    "nama_bank": "BANK PERMATA SYARIAH",
+    "kode_bank": "013"
+  },
+  {
+    "nama_bank": "BANK RAYA INDONESIA",
+    "kode_bank": "494"
+  },
+  {
+    "nama_bank": "BANK RESONA PERDANIA",
+    "kode_bank": "047"
+  },
+  {
+    "nama_bank": "BANK RIAU KEPRI SYARIAH",
+    "kode_bank": "119"
+  },
+  {
+    "nama_bank": "BANK SAHABAT SAMPOERNA",
+    "kode_bank": "523"
+  },
+  {
+    "nama_bank": "BANK SHINHAN INDONESIA",
+    "kode_bank": "152"
+  },
+  {
+    "nama_bank": "BANK SINARMAS",
+    "kode_bank": "153"
+  },
+  {
+    "nama_bank": "BANK SULSELBAR",
+    "kode_bank": "126"
+  },
+  {
+    "nama_bank": "BANK SULSELBAR UNIT SYARIAH",
+    "kode_bank": "126"
+  },
+  {
+    "nama_bank": "BANK SULTENG",
+    "kode_bank": "134"
+  },
+  {
+    "nama_bank": "BANK SULTRA",
+    "kode_bank": "135"
+  },
+  {
+    "nama_bank": "BANK SULUTGO",
+    "kode_bank": "127"
+  },
+  {
+    "nama_bank": "BANK SUMBAR (BANK NAGARI)",
+    "kode_bank": "118"
+  },
+  {
+    "nama_bank": "BANK SUMBAR (BANK NAGARI) SYARIAH",
+    "kode_bank": "118"
+  },
+  {
+    "nama_bank": "BANK SUMSEL BABEL",
+    "kode_bank": "120"
+  },
+  {
+    "nama_bank": "BANK SUMSEL BABEL UNIT SYARIAH",
+    "kode_bank": "120"
+  },
+  {
+    "nama_bank": "BANK SUMUT",
+    "kode_bank": "117"
+  },
+  {
+    "nama_bank": "BANK SUMUT UNIT SYARIAH",
+    "kode_bank": "117"
+  },
+  {
+    "nama_bank": "BANK SYARIAH INDONESIA",
+    "kode_bank": "451"
+  },
+  {
+    "nama_bank": "BANK TABUNGAN PENSIUNAN NASIONAL (BTPN)",
+    "kode_bank": "213"
+  },
+  {
+    "nama_bank": "BANK UOB INDONESIA",
+    "kode_bank": "023"
+  },
+  {
+    "nama_bank": "BANK VICTORIA INTERNATIONAL",
+    "kode_bank": "566"
+  },
+  {
+    "nama_bank": "BANK VICTORIA SYARIAH",
+    "kode_bank": "405"
+  },
+  {
+    "nama_bank": "BANK WOORI SAUDARA",
+    "kode_bank": "212"
+  },
+  {
+    "nama_bank": "BCA SYARIAH",
+    "kode_bank": "536"
+  },
+  {
+    "nama_bank": "BNP PARIBAS INDONESIA",
+    "kode_bank": "057"
+  },
+  {
+    "nama_bank": "BTN (BANK TABUNGAN NEGARA)",
+    "kode_bank": "200"
+  },
+  {
+    "nama_bank": "BTN (BANK TABUNGAN NEGARA) SYARIAH",
+    "kode_bank": "200"
+  },
+  {
+    "nama_bank": "BTPN SYARIAH",
+    "kode_bank": "547"
+  },
+  {
+    "nama_bank": "Bank OKE Indonesia",
+    "kode_bank": "526"
+  },
+  {
+    "nama_bank": "CCB (CHINA CONSTRUCTION BANK) INDONESIA",
+    "kode_bank": "036"
+  },
+  {
+    "nama_bank": "CENTRATAMA NASIONAL BANK",
+    "kode_bank": "559"
+  },
+  {
+    "nama_bank": "CIMB NIAGA",
+    "kode_bank": "022"
+  },
+  {
+    "nama_bank": "CIMB NIAGA UNIT USAHA SYARIAH",
+    "kode_bank": "022"
+  },
+  {
+    "nama_bank": "CITIBANK",
+    "kode_bank": "031"
+  },
+  {
+    "nama_bank": "COMMONWEALTH BANK",
+    "kode_bank": "950"
+  },
+  {
+    "nama_bank": "CTBC (CHINATRUST) INDONESIA",
+    "kode_bank": "949"
+  },
+  {
+    "nama_bank": "DBS INDONESIA",
+    "kode_bank": "046"
+  },
+  {
+    "nama_bank": "DEUTSCHE BANK AG",
+    "kode_bank": "067"
+  },
+  {
+    "nama_bank": "HSBC INDONESIA",
+    "kode_bank": "087"
+  },
+  {
+    "nama_bank": "J TRUST BANK",
+    "kode_bank": "095"
+  },
+  {
+    "nama_bank": "JPMORGAN CHASE BANK",
+    "kode_bank": "032"
+  },
+  {
+    "nama_bank": "KB BUKOPIN SYARIAH",
+    "kode_bank": "521"
+  },
+  {
+    "nama_bank": "KEB HANA BANK INDONESIA",
+    "kode_bank": "484"
+  },
+  {
+    "nama_bank": "KROM BANK",
+    "kode_bank": "459"
+  },
+  {
+    "nama_bank": "MAYBANK INDONESIA",
+    "kode_bank": "016"
+  },
+  {
+    "nama_bank": "MAYBANK INDONESIA UNIT  SYARIAH",
+    "kode_bank": "016"
+  },
+  {
+    "nama_bank": "MUFG BANK, LTD",
+    "kode_bank": "042"
+  },
+  {
+    "nama_bank": "NANOBANK SYARIAH",
+    "kode_bank": "153"
+  },
+  {
+    "nama_bank": "NOBU (NATIONALNOBU) BANK",
+    "kode_bank": "503"
+  },
+  {
+    "nama_bank": "OCBC NISP",
+    "kode_bank": "028"
+  },
+  {
+    "nama_bank": "OCBC NISP UNIT SYARIAH",
+    "kode_bank": "028"
+  },
+  {
+    "nama_bank": "PANIN DUBAI SYARIAH BANK",
+    "kode_bank": "517"
+  },
+  {
+    "nama_bank": "PRIMA MASTER BANK",
+    "kode_bank": "520"
+  },
+  {
+    "nama_bank": "QNB INDONESIA",
+    "kode_bank": "167"
+  },
+  {
+    "nama_bank": "SBI INDONESIA",
+    "kode_bank": "498"
+  },
+  {
+    "nama_bank": "SEABANK",
+    "kode_bank": "535"
+  },
+  {
+    "nama_bank": "STANDARD CHARTERED BANK",
+    "kode_bank": "050"
+  }
+]

@@ -1,0 +1,1087 @@
+# 📘 Penjelasan Lengkap: Bagaimana Dashboard.vue Bekerja
+
+## 🎯 Gambaran Umum
+
+[dashboard.vue](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue) adalah halaman utama aplikasi yang menampilkan:
+1. **Summary Card** - Ringkasan kode tagihan, total iuran, dan tagihan
+2. **Tabel Riwayat Laporan** - Daftar semua laporan bulanan dengan pagination dan filter
+3. **Modal Konfirmasi** - Dialog untuk cetak, hapus, dan download laporan
+
+---
+
+## 🏗️ Arsitektur File
+
+File ini dibagi menjadi 2 bagian utama:
+- **`<script setup>`** (Baris 1-269): Logic dan data
+- **`<template>`** (Baris 271-633): UI/tampilan
+
+---
+
+# 📦 BAGIAN 1: IMPORTS & DEPENDENCIES
+
+```javascript
+// Baris 2: Import Vue Composables
+import { ref, computed, onMounted, watch } from "vue";
+```
+
+**Penjelasan:**
+- `ref` - Untuk membuat reactive state (data yang berubah-ubah)
+- `computed` - Untuk membuat data yang dihitung otomatis dari data lain
+- `onMounted` - Lifecycle hook yang dijalankan saat component pertama kali dimuat
+- `watch` - Untuk memantau perubahan data dan bereaksi
+
+```javascript
+// Baris 3: Import Router
+import { useRouter } from "vue-router";
+```
+
+**Penjelasan:**
+- `useRouter` - Untuk navigasi antar halaman (pindah dari dashboard ke report, dll)
+
+```javascript
+// Baris 4-9: Import Components
+import ContentContainer from "../components/ContentContainer.vue";
+import Table from "../components/Table.vue";
+import Pagination from "../components/Pagination.vue";
+import Chip from "../components/Chip.vue";
+import Dialog from "../components/Dialog.vue";
+import Button from "../components/Button.vue";
+```
+
+**Penjelasan:**
+Ini adalah komponen-komponen reusable yang digunakan:
+- `ContentContainer` - Pembungkus untuk card/container
+- `Table` - Komponen tabel untuk menampilkan data
+- `Pagination` - Tombol prev/next untuk pagination
+- `Chip` - Badge untuk status (Draft, Final, dll)
+- `Dialog` - Modal popup
+- `Button` - Tombol reusable
+
+```javascript
+// Baris 10: Import Services
+import { api } from "../services/api.js";
+```
+
+**Penjelasan:**
+- `api` - Service utama untuk fetch data dari mock API (localStorage)
+
+```javascript
+// Baris 11-12: Import Utils
+import { formatCurrency } from "../utils/formatters.js";
+import { openReportPrintPreview, downloadReportWorkbook } from "../utils/reportExport.js";
+```
+
+**Penjelasan:**
+- `formatCurrency` - Function untuk format angka jadi currency (contoh: 1000000 → Rp 1.000.000)
+- `openReportPrintPreview` - Function untuk buka print preview
+- `downloadReportWorkbook` - Function untuk download Excel
+
+```javascript
+// Baris 13: Import Composable
+import { usePagination } from "../composables/usePagination.js";
+```
+
+**Penjelasan:**
+- `usePagination` - Reusable logic untuk pagination (prev/next page)
+
+---
+
+# 📊 BAGIAN 2: STATE MANAGEMENT (Data Reactive)
+
+## 2.1 Data dari API
+
+```javascript
+// Baris 16: Data riwayat laporan (raw dari API)
+const reportHistoryDataRaw = ref([]);
+```
+
+**Penjelasan:**
+- `ref([])` membuat array kosong yang reactive
+- Data ini akan diisi oleh API [getDashboardHistory()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/services/api.js#120-180)
+- Contoh isi setelah di-load:
+  ```javascript
+  [
+    {
+      periode: "11/2025",
+      periodeRaw: "2025-11",
+      jumlahTk: 150,
+      nominalIuran: 5000000,
+      nominalDenda: 100000,
+      status: "DRAFT",
+      actions: ["Edit", "Hapus"]
+    },
+    // ... data lainnya
+  ]
+  ```
+
+```javascript
+// Baris 19-20: Loading & Error states
+const isLoading = ref(false);
+const error = ref(null);
+```
+
+**Penjelasan:**
+- `isLoading` - Untuk tampilkan "Memuat data..." saat loading
+- `error` - Untuk tampilkan pesan error jika ada masalah
+
+```javascript
+// Baris 23-30: Header tabel
+const tableHeaders = ref([
+  "PERIODE",
+  "JUMLAH TK",
+  "NOMINAL IURAN (Rp)",
+  "NOMINAL DENDA (Rp)",
+  "STATUS",
+  "AKSI",
+]);
+```
+
+**Penjelasan:**
+- Array string untuk header kolom tabel
+- Akan ditampilkan di baris pertama tabel
+
+## 2.2 Computed Data (Data yang Dihitung)
+
+```javascript
+// Baris 33-47: Transform data untuk tabel
+const reportHistoryData = computed(() => {
+  if (!reportHistoryDataRaw.value || reportHistoryDataRaw.value.length === 0) {
+    return [];
+  }
+  return reportHistoryDataRaw.value.map((row) => ({
+    periode: row.periode,
+    periodeKey: row.periodeRaw || row.original?.periode || row.periode,
+    "jumlah tk": row.jumlahTk,
+    "nominal iuran (rp)": formatCurrency(row.nominalIuran),
+    "nominal denda (rp)": formatCurrency(row.nominalDenda),
+    status: row.status,
+    aksi: row.actions,
+    actions: row.actions,
+  }));
+});
+```
+
+**Penjelasan:**
+`computed()` membuat data yang **otomatis update** saat `reportHistoryDataRaw` berubah.
+
+**Proses Transform:**
+1. Cek jika data kosong → return `[]`
+2. Loop setiap row data raw
+3. Transform setiap row:
+   - Periode tetap sama
+   - PeriodeKey untuk identifier internal
+   - Jumlah TK tetap sama
+   - **Nominal iuran dan denda di-format jadi currency** (Rp 5.000.000)
+   - Status tetap sama
+   - Actions untuk tombol aksi
+
+**Mengapa pakai computed?**
+- Data raw bisa berubah saat filter/pagination berubah
+- Computed otomatis re-calculate tanpa kita panggil manual
+- Lebih efisien karena hanya update saat dependency berubah
+
+## 2.3 Pagination State
+
+```javascript
+// Baris 52-58: Setup pagination
+let loadHistoryDataRef = null;
+const { currentPage, totalPages, handlePrevPage, handleNextPage } = usePagination({
+  loadDataFunction: () => {
+    if (loadHistoryDataRef) {
+      loadHistoryDataRef();
+    }
+  },
+});
+```
+
+**Penjelasan:**
+- `usePagination` adalah composable yang return:
+  - `currentPage` - Halaman saat ini (default: 1)
+  - `totalPages` - Total halaman
+  - `handlePrevPage` - Function untuk prev page
+  - `handleNextPage` - Function untuk next page
+- [loadDataFunction](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#53-58) akan dipanggil saat page berubah
+- `loadHistoryDataRef` adalah reference ke function [loadHistoryData()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#214-235) (didefinisikan nanti)
+
+## 2.4 Summary Data
+
+```javascript
+// Baris 61-66: Data summary card
+const summaryData = ref({
+  kodeTagihan: "",
+  totalIuranDanDenda: 0,
+  sisaPembayaran: 0,
+  totalTagihan: 0,
+});
+```
+
+**Penjelasan:**
+- Data untuk card summary di atas tabel
+- Default value kosong/0
+- Akan diisi oleh API [getDashboardSummary()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/services/api.js#108-119)
+
+## 2.5 Filter & Options
+
+```javascript
+// Baris 69-78: Filter options
+const itemsPerPage = ref(10);
+const itemsPerPageOptions = [5, 10, 25, 50, 100];
+const statusFilter = ref("all");
+const statusFilterOptions = [
+  { value: "all", label: "Semua" },
+  { value: "DRAFT", label: "Draft" },
+  { value: "APPROVAL", label: "Approval" },
+  { value: "FINAL", label: "Final" },
+  { value: "POSTING", label: "Posting" },
+];
+```
+
+**Penjelasan:**
+- `itemsPerPage` - Berapa baris per halaman (default: 10)
+- `itemsPerPageOptions` - Pilihan untuk dropdown
+- `statusFilter` - Filter status yang dipilih (default: "all")
+- `statusFilterOptions` - Pilihan untuk dropdown status
+
+## 2.6 Router Instance
+
+```javascript
+// Baris 81: Router untuk navigasi
+const router = useRouter();
+```
+
+**Penjelasan:**
+- Instance router untuk navigasi ke halaman lain
+- Digunakan di [handleEdit()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#193-196) untuk pindah ke halaman Report
+
+## 2.7 Modal States
+
+```javascript
+// Baris 84-92: Modal states
+const showCetakModal = ref(false);
+const showHapusModal = ref(false);
+const showDownloadModal = ref(false);
+const selectedPeriode = ref("");
+const selectedPeriodeKey = ref("");
+const isCreatingReport = ref(false);
+const isDeletingReport = ref(false);
+const isPrintingReport = ref(false);
+const isDownloadingReport = ref(false);
+```
+
+**Penjelasan:**
+- `showCetakModal` - Boolean untuk tampilkan/sembunyikan modal cetak
+- `showHapusModal` - Boolean untuk modal hapus
+- `showDownloadModal` - Boolean untuk modal download
+- `selectedPeriode` - Periode yang dipilih (untuk ditampilkan di modal)
+- `selectedPeriodeKey` - Key periode untuk API call
+- `isCreatingReport` - Loading state untuk buat laporan
+- `isDeletingReport` - Loading state untuk hapus laporan
+- `isPrintingReport` - Loading state untuk cetak
+- `isDownloadingReport` - Loading state untuk download
+
+---
+
+# 🔧 BAGIAN 3: METHODS (Functions)
+
+## 3.1 Buat Laporan Baru
+
+```javascript
+// Baris 97-113: Handle buat laporan bulanan
+async function handleNewReport() {
+  if (isCreatingReport.value) return; // Prevent double click
+  isCreatingReport.value = true;
+  try {
+    const result = await api.createNewReport();
+    await loadHistoryData();
+    router.push({
+      path: "/report",
+      query: { periode: result.periodeDisplay, from: "dashboard", newlyCreated: "true" },
+    });
+  } catch (err) {
+    error.value = err.message || "Gagal membuat laporan baru";
+  } finally {
+    isCreatingReport.value = false;
+  }
+}
+```
+
+**Flow Eksekusi:**
+1. User klik tombol "BUAT LAPORAN BULANAN"
+2. Function [handleNewReport()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#94-114) dipanggil
+3. Check jika sedang creating (prevent double click)
+4. Set `isCreatingReport = true` (tombol jadi loading)
+5. Call API [createNewReport()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/services/api.js#432-615) → API akan:
+   - Ambil periode terakhir (misalnya "2025-11")
+   - Increment jadi periode baru ("2025-12")
+   - Buat data laporan baru dengan struktur default
+   - Save ke localStorage
+6. Reload history data untuk tampilkan laporan baru
+7. **Redirect ke halaman Report** dengan query:
+   - `periode`: "12/2025"
+   - `from`: "dashboard"
+   - `newlyCreated`: "true"
+8. Jika error → tampilkan pesan error
+9. Finally → set `isCreatingReport = false`
+
+## 3.2 Set Context untuk Modal
+
+```javascript
+// Baris 115-123: Set periode yang dipilih
+function setSelectedPeriodeContext(row, fallbackPeriode = "") {
+  if (row) {
+    selectedPeriode.value = row.periode || row.periodeDisplay || fallbackPeriode || "";
+    selectedPeriodeKey.value = row.periodeKey || row.original?.periode || row.periode || fallbackPeriode || "";
+  } else {
+    selectedPeriode.value = fallbackPeriode || "";
+    selectedPeriodeKey.value = fallbackPeriode || "";
+  }
+}
+```
+
+**Penjelasan:**
+- Function helper untuk set periode yang dipilih
+- Digunakan sebelum buka modal
+- Mengambil data dari row tabel:
+  - `periode` untuk display (contoh: "11/2025")
+  - `periodeKey` untuk API call (contoh: "2025-11")
+
+## 3.3 Handle Aksi Tabel
+
+```javascript
+// Baris 125-138: Handle aksi cetak, hapus, download
+function handleCetak(row) {
+  setSelectedPeriodeContext(row);
+  showCetakModal.value = true;
+} 
+
+function handleHapus(row) {
+  setSelectedPeriodeContext(row);
+  showHapusModal.value = true;
+}
+
+function handleDownload(row) {
+  setSelectedPeriodeContext(row);
+  showDownloadModal.value = true;
+}
+```
+
+**Flow:**
+1. User klik tombol CETAK/HAPUS/DOWNLOAD di tabel
+2. Function dipanggil dengan parameter `row` (data baris yang diklik)
+3. [setSelectedPeriodeContext(row)](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#115-124) → set periode yang dipilih
+4. Set modal state jadi `true` → modal muncul
+
+## 3.4 Konfirmasi Cetak
+
+```javascript
+// Baris 140-157: Proses cetak laporan
+async function handleCetakConfirm() {
+  if (isPrintingReport.value) return;
+  try {
+    isPrintingReport.value = true;
+    const periode = selectedPeriodeKey.value || selectedPeriode.value;
+    if (!periode) {
+      throw new Error("Periode laporan tidak ditemukan.");
+    }
+    const report = await api.getReportByPeriode(periode);
+    openReportPrintPreview(report, selectedPeriode.value);
+  } catch (err) {
+    console.error(err);
+    error.value = err.message || "Gagal mencetak laporan";
+  } finally {
+    isPrintingReport.value = false;
+    showCetakModal.value = false;
+  }
+}
+```
+
+**Flow:**
+1. User klik tombol "Cetak" di modal
+2. Set `isPrintingReport = true` (tombol jadi loading)
+3. Ambil periode dari `selectedPeriodeKey`
+4. **Call API** [getReportByPeriode(periode)](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/services/api.js#181-265) → return data laporan lengkap
+5. **Call util** `openReportPrintPreview(report, periode)` → buka print window
+6. Tutup modal
+7. Jika error → tampilkan pesan error
+
+## 3.5 Konfirmasi Hapus
+
+```javascript
+// Baris 159-171: Proses hapus laporan
+async function handleHapusConfirm() {
+  if (isDeletingReport.value || !selectedPeriodeKey.value) return;
+  try {
+    isDeletingReport.value = true;
+    await api.deleteReport(selectedPeriodeKey.value);
+    showHapusModal.value = false;
+    await loadHistoryData();
+  } catch (err) {
+    error.value = err.message || "Gagal menghapus laporan";
+  } finally {
+    isDeletingReport.value = false;
+  }
+}
+```
+
+**Flow:**
+1. User klik tombol "Hapus" di modal
+2. Set `isDeletingReport = true`
+3. **Call API** [deleteReport(periode)](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/services/api.js#616-670) → hapus dari localStorage
+4. Tutup modal
+5. **Reload history data** untuk update tabel (laporan yang dihapus hilang)
+6. Jika error → tampilkan pesan error
+
+## 3.6 Konfirmasi Download
+
+```javascript
+// Baris 173-191: Proses download Excel
+async function handleDownloadConfirm() {
+  if (isDownloadingReport.value) return;
+  try {
+    isDownloadingReport.value = true;
+    const periode = selectedPeriodeKey.value || selectedPeriode.value;
+    if (!periode) {
+      throw new Error("Periode laporan tidak ditemukan.");
+    }
+    const report = await api.getReportByPeriode(periode);
+    const fileName = `laporan-${periode.replace('/', '-')}.xlsx`;
+    downloadReportWorkbook(report, fileName);
+  } catch (err) {
+    console.error(err);
+    error.value = err.message || "Gagal mengunduh laporan";
+  } finally {
+    isDownloadingReport.value = false;
+    showDownloadModal.value = false;
+  }
+}
+```
+
+**Flow:**
+1. User klik tombol "Download" di modal
+2. Set `isDownloadingReport = true`
+3. Ambil data laporan dari API
+4. Generate nama file: `laporan-2025-11.xlsx`
+5. **Call util** `downloadReportWorkbook()` → generate Excel & trigger download
+6. Tutup modal
+
+## 3.7 Handle Edit
+
+```javascript
+// Baris 193-195: Navigasi ke halaman edit
+function handleEdit(periode) {
+  router.push({ path: "/report", query: { periode, from: 'dashboard' } });
+}
+```
+
+**Flow:**
+1. User klik tombol "EDIT" di tabel
+2. **Redirect ke halaman Report** dengan query parameter:
+   - `periode`: "11/2025"
+   - `from`: "dashboard"
+3. Halaman Report akan load data untuk periode tersebut
+
+## 3.8 Load Summary Data
+
+```javascript
+// Baris 200-212: Load data summary card
+async function loadSummaryData() {
+  try {
+    const summary = await api.getDashboardSummary();
+    summaryData.value = {
+      kodeTagihan: summary.kodeTagihan || "",
+      totalIuranDanDenda: summary.totalIuranDanDenda || 0,
+      sisaPembayaran: summary.sisaPembayaran || 0,
+      totalTagihan: summary.totalTagihan || 0,
+    };
+  } catch (err) {
+    error.value = err.message || 'Gagal memuat data summary';
+  }
+}
+```
+
+**Flow:**
+1. **Call API** [getDashboardSummary()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/services/api.js#108-119)
+2. API return data:
+   ```javascript
+   {
+     kodeTagihan: "BIL-2025-001",
+     totalIuranDanDenda: 5100000,
+     sisaPembayaran: 200000,
+     totalTagihan: 5300000
+   }
+   ```
+3. Update `summaryData.value` dengan data dari API
+4. Vue otomatis update tampilan card
+
+## 3.9 Load History Data (PENTING!)
+
+```javascript
+// Baris 215-234: Load data riwayat dengan pagination
+async function loadHistoryData(forceReload = false) {
+  isLoading.value = true;
+  error.value = null;
+  try {
+    const historyData = await api.getDashboardHistory(
+      currentPage.value,
+      itemsPerPage.value,
+      statusFilter.value,
+      forceReload
+    );
+    reportHistoryDataRaw.value = historyData.data || [];
+    currentPage.value = historyData.pagination?.page || 1;
+    totalPages.value = historyData.pagination?.totalPages || 1;
+  } catch (err) {
+    error.value = err.message || 'Gagal memuat data history';
+    reportHistoryDataRaw.value = [];
+  } finally {
+    isLoading.value = false;
+  }
+}
+```
+
+**Flow:**
+1. Set `isLoading = true` → tampilkan "Memuat data..."
+2. **Call API** [getDashboardHistory()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/services/api.js#120-180) dengan parameter:
+   - `currentPage`: Halaman saat ini (1, 2, 3, ...)
+   - `itemsPerPage`: Berapa baris per halaman (10, 25, 50, ...)
+   - `statusFilter`: Filter status ("all", "DRAFT", "FINAL", ...)
+   - `forceReload`: Force reload dari JSON (bypass cache)
+3. API return data:
+   ```javascript
+   {
+     data: [
+       { periode: "11/2025", jumlahTk: 150, ... },
+       { periode: "10/2025", jumlahTk: 145, ... },
+       // ... max 10 items (sesuai itemsPerPage)
+     ],
+     pagination: {
+       page: 1,
+       totalPages: 5,
+       perPage: 10,
+       totalItems: 50
+     }
+   }
+   ```
+4. Update state:
+   - `reportHistoryDataRaw` → array data laporan
+   - `currentPage` → halaman saat ini
+   - `totalPages` → total halaman
+5. `reportHistoryData` (computed) otomatis update karena `reportHistoryDataRaw` berubah
+6. Set `isLoading = false` → tampilan kembali normal
+
+---
+
+# 🔄 BAGIAN 4: REACTIVITY & LIFECYCLE
+
+## 4.1 Reference Assignment
+
+```javascript
+// Baris 237: Assign reference untuk pagination
+loadHistoryDataRef = loadHistoryData;
+```
+
+**Penjelasan:**
+- Karena `usePagination` dipanggil sebelum [loadHistoryData](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#214-235) didefinisikan
+- Kita assign reference setelah function didefinisikan
+- Saat user klik prev/next, `usePagination` akan panggil function ini
+
+## 4.2 Watch Filter Changes
+
+```javascript
+// Baris 240-243: Watch perubahan filter
+watch([statusFilter, itemsPerPage], () => {
+  currentPage.value = 1; // Reset ke halaman pertama
+  loadHistoryData();
+});
+```
+
+**Flow:**
+1. User ubah filter status dari "Semua" ke "Draft"
+2. `watch` detect perubahan `statusFilter`
+3. Reset `currentPage` ke 1 (karena hasil filter bisa beda jumlah halaman)
+4. Call [loadHistoryData()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#214-235) → reload tabel dengan filter baru
+
+**Contoh:**
+- Filter "Semua" → 50 items → 5 halaman
+- User di halaman 3
+- Ganti filter "Draft" → 15 items → 2 halaman
+- Jika tidak reset, user masih di halaman 3 tapi halaman max cuma 2 → ERROR!
+- Makanya perlu reset ke halaman 1
+
+## 4.3 Watch Route Changes
+
+```javascript
+// Baris 246-252: Watch route untuk refresh
+watch(() => router.currentRoute.value.path, (newPath) => {
+  if (newPath === '/dashboard') {
+    loadHistoryData(true);
+    loadSummaryData();
+  }
+}, { immediate: false });
+```
+
+**Penjelasan:**
+- Watch perubahan URL path
+- Jika user kembali ke `/dashboard` (dari halaman lain)
+- Reload data dengan `forceReload = true` (ambil data terbaru)
+
+**Use Case:**
+1. User di dashboard
+2. Klik "EDIT" → pindah ke `/report`
+3. Upload data massal di halaman report
+4. Kembali ke `/dashboard`
+5. **Watch trigger** → reload data → laporan update dengan data baru
+
+## 4.4 onMounted Lifecycle
+
+```javascript
+// Baris 255-268: Load data saat component mount
+onMounted(async () => {
+  isLoading.value = true;
+  error.value = null;
+  try {
+    await Promise.all([
+      loadSummaryData(),
+      loadHistoryData(true)
+    ]);
+  } catch (err) {
+    error.value = err.message || 'Gagal memuat data';
+  } finally {
+    isLoading.value = false;
+  }
+});
+```
+
+**Flow:**
+1. User buka halaman dashboard (component di-mount)
+2. `onMounted` trigger
+3. Set `isLoading = true`
+4. **Call 2 API sekaligus** (parallel dengan `Promise.all`):
+   - [loadSummaryData()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#199-213) → load data card summary
+   - [loadHistoryData(true)](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#214-235) → load data tabel (force reload)
+5. Tunggu sampai kedua API selesai
+6. Set `isLoading = false`
+7. Tampilan muncul dengan data yang sudah di-load
+
+**Mengapa `Promise.all`?**
+- Lebih cepat karena parallel (tidak tunggu satu selesai baru jalankan yang lain)
+- Kedua API independent (tidak saling bergantung)
+
+---
+
+# 🎨 BAGIAN 5: TEMPLATE (UI)
+
+## 5.1 Layout Structure
+
+```html
+<div class="bg-[#f8f9fa] text-[#1a1a1a] min-h-screen p-4">
+  <div class="max-w-7xl mx-auto">
+    <!-- Judul -->
+    <!-- Card Summary -->
+    <!-- Tabel Riwayat -->
+  </div>
+  <!-- Modals -->
+</div>
+```
+
+**Penjelasan:**
+- Background abu-abu terang (`#f8f9fa`)
+- Container dengan max width 7xl (centered)
+- Padding 4 unit
+
+## 5.2 Summary Card
+
+```html
+<ContentContainer>
+  <template #body>
+    <div class="space-y-0">
+      <!-- 4 baris data summary -->
+      <div class="flex justify-between items-center py-3 border-b">
+        <span>Kode Tagihan</span>
+        <span>{{ summaryData.kodeTagihan }}</span>
+      </div>
+      <!-- dst... -->
+    </div>
+  </template>
+</ContentContainer>
+```
+
+**Component Flow:**
+1. [ContentContainer.vue](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/components/ContentContainer.vue) di-render
+2. Slot `#body` diisi dengan content di atas
+3. Data binding: `{{ summaryData.kodeTagihan }}` → Vue replace dengan value dari state
+4. `formatCurrency()` dipanggil untuk format angka
+
+**Data Flow:**
+```
+api.getDashboardSummary() 
+  → summaryData.value = {...} 
+  → {{ summaryData.kodeTagihan }} 
+  → Tampilan update
+```
+
+## 5.3 Tabel Riwayat - Action Slot
+
+```html
+<template #action>
+  <div class="flex gap-3">
+    <!-- Tombol Buat Laporan -->
+    <button @click="handleNewReport">
+      <svg>...</svg>
+      <span>BUAT LAPORAN BULANAN</span>
+    </button>
+    
+    <!-- Dropdown Filter Status -->
+    <select v-model="statusFilter">
+      <option v-for="option in statusFilterOptions" 
+              :value="option.value">
+        {{ option.label }}
+      </option>
+    </select>
+    
+    <!-- Dropdown Items Per Page -->
+    <select v-model="itemsPerPage">
+      <option v-for="option in itemsPerPageOptions" 
+              :value="option">
+        {{ option }}
+      </option>
+    </select>
+  </div>
+</template>
+```
+
+**Vue Directives:**
+- `@click="handleNewReport"` → Event listener, panggil function saat diklik
+- `v-model="statusFilter"` → Two-way binding (UI ↔ State)
+  - User pilih "Draft" → `statusFilter.value = "DRAFT"`
+  - `statusFilter` berubah → dropdown update
+- `v-for="option in statusFilterOptions"` → Loop array, render `<option>` untuk setiap item
+
+## 5.4 Tabel Riwayat - Body
+
+```html
+<template #body>
+  <!-- Loading State -->
+  <div v-if="isLoading">Memuat data...</div>
+  
+  <!-- Error State -->
+  <div v-else-if="error">{{ error }}</div>
+  
+  <!-- Empty State -->
+  <div v-else-if="reportHistoryData.length === 0">
+    Tidak ada data laporan
+  </div>
+  
+  <!-- Table -->
+  <template v-else-if="reportHistoryData.length > 0">
+    <Table :header="tableHeaders" 
+           :data="reportHistoryData"
+           :customColumns="['status', 'aksi']">
+      <!-- Custom slots untuk kolom tertentu -->
+    </Table>
+    <Pagination @prev="handlePrevPage" 
+                @next="handleNextPage" />
+  </template>
+</template>
+```
+
+**Conditional Rendering:**
+Vue render salah satu berdasarkan kondisi:
+1. Jika `isLoading = true` → tampilkan loading
+2. Jika ada `error` → tampilkan error
+3. Jika data kosong → tampilkan empty state
+4. Jika ada data → tampilkan tabel
+
+**Table Component Props:**
+- `:header="tableHeaders"` → Pass array header
+- `:data="reportHistoryData"` → Pass array data (computed)
+- `:customColumns="['status', 'aksi']"` → Kolom yang pakai custom template
+
+## 5.5 Tabel - Custom Slots
+
+### Slot Status
+
+```html
+<template #cell-status="{ row }">
+  <div class="flex justify-center">
+    <Chip :label="row.status"
+          :variant="row.status === 'FINAL' ? 'final' : 
+                    row.status === 'APPROVAL' ? 'approval' : 
+                    row.status === 'POSTING' ? 'posting' : 'draft'" />
+  </div>
+</template>
+```
+
+**Penjelasan:**
+- `#cell-status="{ row }"` → Terima data row dari parent Table
+- `Chip` component untuk tampilkan badge
+- Variant ditentukan berdasarkan status (conditional logic)
+
+### Slot Aksi
+
+```html
+<template #cell-aksi="{ row }">
+  <div class="flex gap-3">
+    <!-- Tombol Edit -->
+    <button v-if="row.actions && row.actions.includes('Edit')"
+            @click="handleEdit(row.periode)">
+      <span>EDIT</span>
+    </button>
+    
+    <!-- Tombol Cetak -->
+    <button v-if="row.actions && row.actions.includes('Cetak')"
+            @click="handleCetak(row)">
+      <span>CETAK</span>
+    </button>
+    
+    <!-- Tombol Hapus -->
+    <button v-if="row.actions && row.actions.includes('Hapus')"
+            @click="handleHapus(row)">
+      <span>HAPUS</span>
+    </button>
+    
+    <!-- Tombol Download -->
+    <button v-if="row.actions && row.actions.includes('download')"
+            @click="handleDownload(row)">
+      <span>DOWNLOAD</span>
+    </button>
+  </div>
+</template>
+```
+
+**Conditional Rendering:**
+- `v-if="row.actions.includes('Edit')"` → Tampilkan tombol hanya jika action tersedia
+- Setiap row bisa punya action yang berbeda:
+  - Row status "DRAFT" → actions: `['Edit', 'Hapus']`
+  - Row status "FINAL" → actions: `['Cetak', 'download']`
+
+## 5.6 Pagination Component
+
+```html
+<Pagination :currentPage="currentPage"
+            :totalPages="totalPages"
+            @prev="handlePrevPage"
+            @next="handleNextPage" />
+```
+
+**Props & Events:**
+- `:currentPage` → Pass current page (prop binding)
+- `:totalPages` → Pass total pages
+- `@prev` → Event listener untuk tombol prev
+- `@next` → Event listener untuk tombol next
+
+**Flow:**
+1. User klik tombol "Next"
+2. `Pagination` emit event `next`
+3. `@next="handleNextPage"` trigger
+4. `handleNextPage()` dari `usePagination` dipanggil
+5. `currentPage++`
+6. [loadDataFunction()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#53-58) dipanggil
+7. [loadHistoryData()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#214-235) dipanggil
+8. API fetch data untuk page baru
+9. Tabel update dengan data page baru
+
+## 5.7 Modal Cetak
+
+```html
+<Dialog :isDialogOpen="showCetakModal"
+        @close="showCetakModal = false">
+  <template #body>
+    <div class="text-center">
+      <!-- Icon -->
+      <div class="w-16 h-16 bg-blue-100 rounded-full">
+        <svg class="w-10 h-10 text-blue-600">...</svg>
+      </div>
+      
+      <!-- Text -->
+      <h2>Cetak Laporan</h2>
+      <p>Apakah Anda yakin ingin mencetak laporan periode 
+         <strong>{{ selectedPeriode }}</strong>?
+      </p>
+      
+      <!-- Buttons -->
+      <div class="flex gap-3">
+        <Button @click="showCetakModal = false">Batal</Button>
+        <Button @click="handleCetakConfirm" 
+                :disabled="isPrintingReport">
+          {{ isPrintingReport ? "Menyiapkan..." : "Cetak" }}
+        </Button>
+      </div>
+    </div>
+  </template>
+</Dialog>
+```
+
+**Data Binding:**
+- `:isDialogOpen="showCetakModal"` → Modal muncul jika `true`
+- `{{ selectedPeriode }}` → Tampilkan periode yang dipilih
+- `:disabled="isPrintingReport"` → Disable tombol saat loading
+- `{{ isPrintingReport ? "..." : "..." }}` → Conditional text
+
+**Flow:**
+1. `showCetakModal = false` → Modal tersembunyi
+2. User klik tombol "CETAK" di tabel → [handleCetak(row)](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#125-129) dipanggil
+3. [setSelectedPeriodeContext(row)](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#115-124) → set periode
+4. `showCetakModal = true` → Modal muncul
+5. User klik "Cetak" → [handleCetakConfirm()](file:///c:/Users/LENOVO/Documents/GitHub/mutasi-data/src/views/dashboard.vue#140-158) dipanggil
+6. `isPrintingReport = true` → Tombol jadi "Menyiapkan..."
+7. API call → Print window → Modal tutup
+
+---
+
+# 🔄 COMPLETE DATA FLOW DIAGRAM
+
+## Flow 1: Initial Load
+
+```
+1. User buka /dashboard
+   ↓
+2. Vue mount component
+   ↓
+3. onMounted() trigger
+   ↓
+4. Promise.all([
+     loadSummaryData(),     → api.getDashboardSummary()
+     loadHistoryData(true)  → api.getDashboardHistory(1, 10, "all", true)
+   ])
+   ↓
+5. API load dari localStorage → transform data
+   ↓
+6. summaryData.value = {...}
+   reportHistoryDataRaw.value = [...]
+   ↓
+7. reportHistoryData (computed) auto calculate
+   ↓
+8. Vue render template dengan data baru
+   ↓
+9. User lihat summary card + tabel terisi
+```
+
+## Flow 2: Filter Change
+
+```
+1. User pilih filter "Draft"
+   ↓
+2. v-model update: statusFilter.value = "DRAFT"
+   ↓
+3. watch([statusFilter, ...]) detect change
+   ↓
+4. currentPage.value = 1 (reset)
+   ↓
+5. loadHistoryData()
+   ↓
+6. api.getDashboardHistory(1, 10, "DRAFT")
+   ↓
+7. API filter data berdasarkan status
+   ↓
+8. Return hanya data dengan status DRAFT
+   ↓
+9. reportHistoryDataRaw.value = [data DRAFT saja]
+   ↓
+10. reportHistoryData (computed) update
+   ↓
+11. Tabel re-render dengan data baru
+```
+
+## Flow 3: Pagination
+
+```
+1. User klik tombol "Next"
+   ↓
+2. Pagination emit event "next"
+   ↓
+3. @next="handleNextPage" trigger
+   ↓
+4. handleNextPage() dari usePagination
+   ↓
+5. currentPage.value++ (1 → 2)
+   ↓
+6. loadDataFunction() dipanggil
+   ↓
+7. loadHistoryDataRef() → loadHistoryData()
+   ↓
+8. api.getDashboardHistory(2, 10, "all")
+   ↓
+9. API return data page 2
+   ↓
+10. reportHistoryDataRaw.value = [data page 2]
+   ↓
+11. Tabel update dengan data page 2
+```
+
+## Flow 4: Delete Report
+
+```
+1. User klik tombol "HAPUS" di row "11/2025"
+   ↓
+2. handleHapus(row) dipanggil
+   ↓
+3. setSelectedPeriodeContext(row)
+   - selectedPeriode.value = "11/2025"
+   - selectedPeriodeKey.value = "2025-11"
+   ↓
+4. showHapusModal.value = true
+   ↓
+5. Modal muncul dengan text "...periode 11/2025?"
+   ↓
+6. User klik "Hapus"
+   ↓
+7. handleHapusConfirm() dipanggil
+   ↓
+8. isDeletingReport.value = true
+   ↓
+9. api.deleteReport("2025-11")
+   ↓
+10. API hapus dari localStorage
+   ↓
+11. showHapusModal.value = false (tutup modal)
+   ↓
+12. loadHistoryData() → reload tabel
+   ↓
+13. Tabel update tanpa row "11/2025"
+   ↓
+14. isDeletingReport.value = false
+```
+
+---
+
+# 📝 KESIMPULAN
+
+## Komponen yang Digunakan Dashboard.vue
+
+1. **ContentContainer** → Card wrapper
+2. **Table** → Tabel data dengan custom slots
+3. **Pagination** → Prev/Next buttons
+4. **Chip** → Status badge
+5. **Dialog** → Modal popup
+6. **Button** → Button reusable
+
+## Data Sources
+
+1. **Summary Card** ← `api.getDashboardSummary()`
+2. **Tabel Riwayat** ← `api.getDashboardHistory(page, perPage, filter)`
+3. **Detail Laporan** ← `api.getReportByPeriode(periode)` (untuk cetak/download)
+
+## Key Features
+
+1. ✅ **Reactive Data** - Data otomatis update saat berubah
+2. ✅ **Computed Properties** - Transform data otomatis
+3. ✅ **Pagination** - Bisa navigasi antar halaman
+4. ✅ **Filter** - Filter berdasarkan status
+5. ✅ **CRUD Operations** - Create, Read, Delete laporan
+6. ✅ **Loading States** - Loading indicator untuk UX yang baik
+7. ✅ **Error Handling** - Tampilkan error jika ada masalah
+8. ✅ **Modal Confirmation** - Konfirmasi sebelum aksi penting
+9. ✅ **Export** - Cetak dan download Excel
+
+## Logic Flow Utama
+
+```
+Mount → Load Data → Display
+  ↓
+User Action → Update State → API Call → Update Data → Re-render
+  ↓
+Navigation/Filter/Pagination → Reload Data → Update Display
+```
+
+Semua bekerja berkat **Vue Reactivity System** yang otomatis detect perubahan dan update UI! 🎉
